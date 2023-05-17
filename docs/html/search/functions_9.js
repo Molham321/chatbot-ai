@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['save_313',['save',['../classadmin__panel_1_1models_1_1_admin_settings.html#a77444a545ce6c7a9a768d6cf9e21d660',1,'admin_panel.models.AdminSettings.save()'],['../classchatbot__logging_1_1models_1_1_chatbot_conversation_log.html#aa3a763a3dc15dd6a4a924177d5f64d20',1,'chatbot_logging.models.ChatbotConversationLog.save()'],['../classchatbot__logging_1_1models_1_1_calculated_answer.html#abe72d6d9d73566c7baa1db3b0ee6f973',1,'chatbot_logging.models.CalculatedAnswer.save()'],['../classchatbot__logging_1_1models_1_1_chatbot_software_log.html#ac6c68ccdd7a2654ba4dcde3ec4144572',1,'chatbot_logging.models.ChatbotSoftwareLog.save()'],['../classchatbot__logic_1_1models_1_1_answer.html#a9ce6d77870642ec877ee23914ffbf33d',1,'chatbot_logic.models.Answer.save()'],['../classchatbot__logic_1_1models_1_1_context.html#a52bd4b8f2b504ad5bcf6ec02efdfd632',1,'chatbot_logic.models.Context.save()'],['../classchatbot__logic_1_1models_1_1_question.html#a44c9f9998cbd06e2124a21e341bf5535',1,'chatbot_logic.models.Question.save()'],['../classchatbot__logic_1_1models_1_1_keyword.html#a253140af5f431c5f708781ede9b97de8',1,'chatbot_logic.models.Keyword.save()'],['../classchatbot__logic_1_1models_1_1_settings.html#a01d0c0c08874d5fc5138d6eb16caa9d2',1,'chatbot_logic.models.Settings.save()']]],
+  ['save_5fanswer_314',['save_answer',['../class_logging_service_1_1_logging_service.html#a75344dcfee7db8a966c251045792b927',1,'LoggingService::LoggingService']]],
+  ['save_5fanswers_5fview_315',['save_answers_view',['../namespaceadmin__panel_1_1views.html#accc064d09644112616c23bb78e48a12f',1,'admin_panel::views']]],
+  ['save_5fcontexts_5fview_316',['save_contexts_view',['../namespaceadmin__panel_1_1views.html#a6c035249b0c08cbd5797ceabf78ca075',1,'admin_panel::views']]],
+  ['save_5fconversation_5flog_317',['save_conversation_log',['../class_logging_service_1_1_logging_service.html#a5d335419f3578acf7f1e5d8035f80621',1,'LoggingService::LoggingService']]],
+  ['save_5fquestions_5fview_318',['save_questions_view',['../namespaceadmin__panel_1_1views.html#a371f15822a286c23887cce67357eff14',1,'admin_panel::views']]],
+  ['save_5fsettings_5fview_319',['save_settings_view',['../namespaceadmin__panel_1_1views.html#a4527d5e6d300af659008570b01cdb031',1,'admin_panel::views']]],
+  ['settings_5fview_320',['settings_view',['../namespaceadmin__panel_1_1views.html#acd276a13e0018e3543613127f4506c3b',1,'admin_panel::views']]],
+  ['similarityvalue_321',['SimilarityValue',['../class_c_matcher_1_1_c_matcher.html#a577fc831f8ae912d2a3c5aecda9a5bae',1,'CMatcher::CMatcher']]],
+  ['spacysimilarity_322',['SpacySimilarity',['../class_c_matcher_1_1_c_matcher.html#a47887aed6fbe6ee35b1d6d3a855ae3a2',1,'CMatcher::CMatcher']]]
+];

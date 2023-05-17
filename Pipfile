@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+
+[packages]
+Django = "==3.1"
+djangorestframework = "==3.11.1"
+spacy = "==2.3.2"
+nltk = "==3.5"
+sphinx = "==3.2.1"
+xhtml2pdf = "*"
+
+[requires]
+python_version = "3.8.5"

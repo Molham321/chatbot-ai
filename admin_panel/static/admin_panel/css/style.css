@@ -1,0 +1,219 @@
+html, body {
+    min-height: 100%;
+}
+
+.content-row {
+    margin-top: 50px;
+}
+
+.brand-logo > img {
+    max-width: 200px;
+    margin-left: 20px;
+}
+
+.navigation-title {
+    color: #003366;
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+/* Root Page */
+
+.index-card-image {
+    max-height: 300px;
+    margin-top: 5px;
+}
+
+.card .card-content p {
+    text-align: justify;
+}
+
+.fhe-color {
+    color: #003366 !important;
+}
+
+.accent-color {
+    color: #cc0052 !important;
+}
+
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+    color: #003366;
+}
+
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating):hover {
+    color: #cc0052;
+}
+
+/* Login Page */
+
+/* password label focus color */
+.input-field input:focus + label {
+    color: #003366 !important;
+}
+
+/* password label underline focus color */
+.input-field input:focus {
+    border-bottom: 1px solid #003366 !important;
+    box-shadow: 0 1px 0 0 #003366 !important;
+}
+
+.login-form {
+    margin-top: 100px;
+}
+
+.login-picture > img {
+    max-width: 400px;
+}
+
+.form-elements {
+    margin-top: 50px;
+}
+
+.btn, .btn-small {
+    background-color: #003366;
+}
+
+.btn:hover, a.btn-small:hover {
+    background-color: #cc0052;
+}
+
+.btn:active, a.btn-small:active {
+    background-color: #003366;
+}
+
+.btn:focus, a.btn-small:focus {
+    background-color: #003366;
+}
+
+#help-button, .create-button {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+}
+
+.tap-target, .create-button {
+    background-color: #003366;
+    color: #FFFFFF;
+}
+
+.tap-target-origin, .create-button:hover {
+    background-color: #cc0052;
+}
+
+.tap-target-origin:hover {
+    background-color: #003366;
+}
+
+.tap-target-content > p {
+    text-align: justify;
+}
+
+/* Settings Page */
+
+.settings {
+    margin-top: 50px;
+}
+
+.collapsible-header {
+    color: #003366;
+    padding: 1rem;
+    font-size: 1.5rem;
+}
+
+.collapsible-header:hover {
+    color: #cc0052;
+}
+
+.collapsible-desc {
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+/* password label focus color */
+.input-field textarea:focus + label {
+    color: #003366 !important;
+}
+
+/* password label underline focus color */
+.input-field textarea:focus {
+    border-bottom: 1px solid #003366 !important;
+    box-shadow: 0 1px 0 0 #003366 !important;
+}
+
+p.matching-radio > label {
+    color: #003366;
+}
+
+[type="radio"]:checked + span:after {
+    background-color: #003366;
+    border: #003366;
+}
+
+#toast-container {
+    top: auto !important;
+    left: auto !important;
+    bottom: 10%;
+    right: 7%;
+}
+
+/* Logging */
+
+.align-right {
+    text-align: right;
+}
+
+.logging-table, .download-btn {
+    margin-top: 50px;
+}
+
+.pagination > li.active {
+    background-color: #003366;
+}
+
+.circle-fhe {
+    background-color: #003366 !important;
+}
+
+.td-center {
+    text-align: center;
+}
+
+.logging-back {
+    margin-top: 40px;
+}
+
+.dropdown-content li > span {
+    color: #003366;
+}
+
+.tabs .tab a {
+    color: #003366 !important;
+}
+
+.tabs .tab a.active {
+    color: #cc0052 !important;
+}
+
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+    background-color: #FFFFFF !important;
+}
+
+.tabs .indicator {
+    background-color: #003366 !important;
+}
+
+.toggle-button {
+    background-color: darkgrey;
+}
+
+.toggle-button:hover, .toggle-button:focus {
+     background-color: darkgrey !important;
+}
+
+.toggle-button.active {
+    background-color: mediumseagreen;
+}
+
+.toggle-button.active:hover, .toggle-button.active:focus {
+   background-color: mediumseagreen !important;
+}

@@ -1,0 +1,70 @@
+\hypertarget{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration}{}\doxysection{admin\+\_\+panel.\+migrations.0001\+\_\+initial.\+Migration Class Reference}
+\label{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration}\index{admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}}
+Inheritance diagram for admin\+\_\+panel.\+migrations.0001\+\_\+initial.\+Migration\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_a91d73deefd3a2bcc037555bcac56b9e3}{initial}} = True
+\item 
+list \mbox{\hyperlink{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_ae0a4a08e3bc7ba8d65c9a884a0ba64b2}{dependencies}}
+\item 
+list \mbox{\hyperlink{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_a274fcbda391f0d5b492660b585436abf}{operations}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_ae0a4a08e3bc7ba8d65c9a884a0ba64b2}\label{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_ae0a4a08e3bc7ba8d65c9a884a0ba64b2}} 
+\index{admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}!dependencies@{dependencies}}
+\index{dependencies@{dependencies}!admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}}
+\doxysubsubsection{\texorpdfstring{dependencies}{dependencies}}
+{\footnotesize\ttfamily list admin\+\_\+panel.\+migrations.\+0001\+\_\+initial.\+Migration.\+dependencies\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [}
+\DoxyCodeLine{    ]}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_a91d73deefd3a2bcc037555bcac56b9e3}\label{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_a91d73deefd3a2bcc037555bcac56b9e3}} 
+\index{admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}!initial@{initial}}
+\index{initial@{initial}!admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}}
+\doxysubsubsection{\texorpdfstring{initial}{initial}}
+{\footnotesize\ttfamily bool admin\+\_\+panel.\+migrations.\+0001\+\_\+initial.\+Migration.\+initial = True\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_a274fcbda391f0d5b492660b585436abf}\label{classadmin__panel_1_1migrations_1_10001__initial_1_1_migration_a274fcbda391f0d5b492660b585436abf}} 
+\index{admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}!operations@{operations}}
+\index{operations@{operations}!admin\_panel.migrations.0001\_initial.Migration@{admin\_panel.migrations.0001\_initial.Migration}}
+\doxysubsubsection{\texorpdfstring{operations}{operations}}
+{\footnotesize\ttfamily list admin\+\_\+panel.\+migrations.\+0001\+\_\+initial.\+Migration.\+operations\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [}
+\DoxyCodeLine{        migrations.CreateModel(}
+\DoxyCodeLine{            name=\textcolor{stringliteral}{'AdminSettings'},}
+\DoxyCodeLine{            fields=[}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'id'}, models.AutoField(auto\_created=\textcolor{keyword}{True}, primary\_key=\textcolor{keyword}{True}, serialize=\textcolor{keyword}{False}, verbose\_name=\textcolor{stringliteral}{'ID'})),}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'modified\_at'}, models.DateTimeField(auto\_now=\textcolor{keyword}{True})),}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'similarity\_factor'}, models.DecimalField(decimal\_places=4, default=0.0, max\_digits=5)),}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'context\_factor'}, models.DecimalField(decimal\_places=4, default=0.0, max\_digits=5)),}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'matching\_method'}, models.CharField(choices=[(\textcolor{stringliteral}{'cosine'}, \textcolor{stringliteral}{'Cosine Matching'}), (\textcolor{stringliteral}{'spacy'}, \textcolor{stringliteral}{'Spacy Matching'})], default=\textcolor{stringliteral}{'cosine'}, max\_length=6)),}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'greeting\_text'}, models.CharField(max\_length=255)),}
+\DoxyCodeLine{                (\textcolor{stringliteral}{'noanswer\_text'}, models.CharField(max\_length=255)),}
+\DoxyCodeLine{            ],}
+\DoxyCodeLine{            options=\{}
+\DoxyCodeLine{                \textcolor{stringliteral}{'verbose\_name\_plural'}: \textcolor{stringliteral}{'AdminSettings'},}
+\DoxyCodeLine{            \},}
+\DoxyCodeLine{        ),}
+\DoxyCodeLine{    ]}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/jankl/\+Pycharm\+Projects/fhe\+\_\+chatbot/admin\+\_\+panel/migrations/\mbox{\hyperlink{admin__panel_2migrations_20001__initial_8py}{0001\+\_\+initial.\+py}}\end{DoxyCompactItemize}

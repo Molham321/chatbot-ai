@@ -1,0 +1,80 @@
+\hypertarget{classchatbot__logic_1_1models_1_1_keyword}{}\doxysection{chatbot\+\_\+logic.\+models.\+Keyword Class Reference}
+\label{classchatbot__logic_1_1models_1_1_keyword}\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+Inheritance diagram for chatbot\+\_\+logic.\+models.\+Keyword\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classchatbot__logic_1_1models_1_1_keyword}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_1_1_meta}{Meta}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_a253140af5f431c5f708781ede9b97de8}{save}} (self, $\ast$args, $\ast$$\ast$kwargs)
+\item 
+def \mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_aa95ccf59482da57b6a229dd7830a1534}{\+\_\+\+\_\+str\+\_\+\+\_\+}} (self)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_ab86051e30541d6b4213d38507b5ebcf7}{created\+\_\+at}} = models.\+Date\+Time\+Field(default=datetime.\+now, blank=True)
+\item 
+\mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_a366579bb2863c76945e682d7d5c1aea6}{modified\+\_\+at}} = models.\+Date\+Time\+Field(auto\+\_\+now=True, blank=True)
+\item 
+\mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_ab54450c86656a2879dfd7f40f6d30feb}{question}} = models.\+Many\+To\+Many\+Field(\mbox{\hyperlink{classchatbot__logic_1_1models_1_1_question}{Question}})
+\item 
+\mbox{\hyperlink{classchatbot__logic_1_1models_1_1_keyword_af5a0b90a0aee461e609921213403ba86}{keyword\+\_\+text}} = models.\+Char\+Field(max\+\_\+length=30)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classchatbot__logic_1_1models_1_1_keyword_aa95ccf59482da57b6a229dd7830a1534}\label{classchatbot__logic_1_1models_1_1_keyword_aa95ccf59482da57b6a229dd7830a1534}} 
+\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}!\_\_str\_\_@{\_\_str\_\_}}
+\index{\_\_str\_\_@{\_\_str\_\_}!chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+\doxysubsubsection{\texorpdfstring{\_\_str\_\_()}{\_\_str\_\_()}}
+{\footnotesize\ttfamily def chatbot\+\_\+logic.\+models.\+Keyword.\+\_\+\+\_\+str\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classchatbot__logic_1_1models_1_1_keyword_a253140af5f431c5f708781ede9b97de8}\label{classchatbot__logic_1_1models_1_1_keyword_a253140af5f431c5f708781ede9b97de8}} 
+\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}!save@{save}}
+\index{save@{save}!chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily def chatbot\+\_\+logic.\+models.\+Keyword.\+save (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{$\ast$}]{args,  }\item[{$\ast$$\ast$}]{kwargs }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Save a Keyword
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classchatbot__logic_1_1models_1_1_keyword_ab86051e30541d6b4213d38507b5ebcf7}\label{classchatbot__logic_1_1models_1_1_keyword_ab86051e30541d6b4213d38507b5ebcf7}} 
+\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}!created\_at@{created\_at}}
+\index{created\_at@{created\_at}!chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+\doxysubsubsection{\texorpdfstring{created\_at}{created\_at}}
+{\footnotesize\ttfamily chatbot\+\_\+logic.\+models.\+Keyword.\+created\+\_\+at = models.\+Date\+Time\+Field(default=datetime.\+now, blank=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logic_1_1models_1_1_keyword_af5a0b90a0aee461e609921213403ba86}\label{classchatbot__logic_1_1models_1_1_keyword_af5a0b90a0aee461e609921213403ba86}} 
+\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}!keyword\_text@{keyword\_text}}
+\index{keyword\_text@{keyword\_text}!chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+\doxysubsubsection{\texorpdfstring{keyword\_text}{keyword\_text}}
+{\footnotesize\ttfamily chatbot\+\_\+logic.\+models.\+Keyword.\+keyword\+\_\+text = models.\+Char\+Field(max\+\_\+length=30)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logic_1_1models_1_1_keyword_a366579bb2863c76945e682d7d5c1aea6}\label{classchatbot__logic_1_1models_1_1_keyword_a366579bb2863c76945e682d7d5c1aea6}} 
+\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}!modified\_at@{modified\_at}}
+\index{modified\_at@{modified\_at}!chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+\doxysubsubsection{\texorpdfstring{modified\_at}{modified\_at}}
+{\footnotesize\ttfamily chatbot\+\_\+logic.\+models.\+Keyword.\+modified\+\_\+at = models.\+Date\+Time\+Field(auto\+\_\+now=True, blank=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logic_1_1models_1_1_keyword_ab54450c86656a2879dfd7f40f6d30feb}\label{classchatbot__logic_1_1models_1_1_keyword_ab54450c86656a2879dfd7f40f6d30feb}} 
+\index{chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}!question@{question}}
+\index{question@{question}!chatbot\_logic.models.Keyword@{chatbot\_logic.models.Keyword}}
+\doxysubsubsection{\texorpdfstring{question}{question}}
+{\footnotesize\ttfamily chatbot\+\_\+logic.\+models.\+Keyword.\+question = models.\+Many\+To\+Many\+Field(\mbox{\hyperlink{classchatbot__logic_1_1models_1_1_question}{Question}})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/jankl/\+Pycharm\+Projects/fhe\+\_\+chatbot/chatbot\+\_\+logic/\mbox{\hyperlink{chatbot__logic_2models_8py}{models.\+py}}\end{DoxyCompactItemize}

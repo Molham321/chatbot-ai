@@ -1,0 +1,49 @@
+\hypertarget{class_logging_service_1_1_logging_service}{}\doxysection{Logging\+Service.\+Logging\+Service Class Reference}
+\label{class_logging_service_1_1_logging_service}\index{LoggingService.LoggingService@{LoggingService.LoggingService}}
+Inheritance diagram for Logging\+Service.\+Logging\+Service\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_logging_service_1_1_logging_service}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{class_logging_service_1_1_logging_service_a5d335419f3578acf7f1e5d8035f80621}{save\+\_\+conversation\+\_\+log}} (self, asked\+\_\+question, matching\+\_\+list)
+\item 
+def \mbox{\hyperlink{class_logging_service_1_1_logging_service_a75344dcfee7db8a966c251045792b927}{save\+\_\+answer}} (self, conversation\+\_\+log, match)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Respresents a Service which handles all chatbot logging operations.
+Note that this class is implemented as a Singleton to prevent long loading times in the chatbot answer process.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_logging_service_1_1_logging_service_a75344dcfee7db8a966c251045792b927}\label{class_logging_service_1_1_logging_service_a75344dcfee7db8a966c251045792b927}} 
+\index{LoggingService.LoggingService@{LoggingService.LoggingService}!save\_answer@{save\_answer}}
+\index{save\_answer@{save\_answer}!LoggingService.LoggingService@{LoggingService.LoggingService}}
+\doxysubsubsection{\texorpdfstring{save\_answer()}{save\_answer()}}
+{\footnotesize\ttfamily def Logging\+Service.\+Logging\+Service.\+save\+\_\+answer (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{conversation\+\_\+log,  }\item[{}]{match }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Saves a single Match entry for the conversation log.
+:param conversation_log: The associated conversation log object.
+:param match: Object containing the matched data.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{class_logging_service_1_1_logging_service_a5d335419f3578acf7f1e5d8035f80621}\label{class_logging_service_1_1_logging_service_a5d335419f3578acf7f1e5d8035f80621}} 
+\index{LoggingService.LoggingService@{LoggingService.LoggingService}!save\_conversation\_log@{save\_conversation\_log}}
+\index{save\_conversation\_log@{save\_conversation\_log}!LoggingService.LoggingService@{LoggingService.LoggingService}}
+\doxysubsubsection{\texorpdfstring{save\_conversation\_log()}{save\_conversation\_log()}}
+{\footnotesize\ttfamily def Logging\+Service.\+Logging\+Service.\+save\+\_\+conversation\+\_\+log (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{asked\+\_\+question,  }\item[{}]{matching\+\_\+list }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Saves a conversation log to the database.
+:param asked_question: The question the user asked the chatbot.
+:param matching_list: A List with calculated similarities for all registered questions.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/jankl/\+Pycharm\+Projects/fhe\+\_\+chatbot/chatbot\+\_\+logging/services/\mbox{\hyperlink{_logging_service_8py}{Logging\+Service.\+py}}\end{DoxyCompactItemize}

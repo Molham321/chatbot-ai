@@ -1,0 +1,60 @@
+{% load static %}
+
+<div class="chat-wrapper" id="chat-history">
+    {% include 'chatbot_logic/chatbot_answer.html' with text=settings.greeting_text %}
+</div>
+
+<div class="input-message">
+
+
+    <div class="row flex no-margin">
+
+        <div class="col s9" id="input-field">
+            <div class="input-field">
+                <textarea id="actual-message" class="materialize-textarea"></textarea>
+                <label for="actual-message">Frage</label>
+            </div>
+        </div>
+
+        <div class="col s2 valign-wrapper" id="input-button">
+            <div class="row no-margin">
+                <a class="btn-small waves-effect waves-light fhe-color" title="Frage senden"
+                   id="send-button">
+                    <i class="material-icons">send</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col s12" id="progress-bar" style="display: none">
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<div class="more-information-container">
+    <div class="overlayClose cursor valign-wrapper" id="toggle-overlay">
+        <i class="material-icons" id="toggle-icon">chevron_left</i>
+    </div>
+
+    <div class="questions-container">
+        <h5 class="white-text center-align questions-header">Ähnliche Fragen</h5>
+
+        <div class="question z-depth-1 cursor" style="display: none">
+            <span class="white-text"></span>
+        </div>
+
+        <div class="question z-depth-1 cursor" style="display: none">
+            <span class="white-text"></span>
+        </div>
+
+        <div class="question z-depth-1 cursor" style="display: none">
+            <span class="white-text"></span>
+        </div>
+
+    </div>
+</div>

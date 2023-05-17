@@ -1,0 +1,83 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+
+    <a href="{% url "admin_panel:admin_logging" %}" class="waves-effect waves-light btn-small logging-back"><i
+            class="material-icons left">arrow_back</i>Zurück zu Übersicht</a>
+
+    <ul class="collection with-header logging-table">
+        <li class="collection-header"><h4>Logfile Nr. {{ log.id }}</h4></li>
+        <li class="collection-item avatar">
+            <i class="material-icons circle circle-fhe">format_list_numbered</i>
+            <b>ID:</b><br>
+            {{ log.id }}
+        </li>
+        <li class="collection-item avatar">
+            <i class="material-icons circle circle-fhe">date_range</i>
+            <b>Erstellt:</b><br>
+            {{ log.created_at|date:"D d. M Y - H:i:s" }}
+        </li>
+        <li class="collection-item avatar">
+            <i class="material-icons circle circle-fhe">help</i>
+            <b>Frage:</b><br>
+            {{ log.asked_question }}
+        </li>
+        <li class="collection-item avatar">
+            <i class="material-icons circle circle-fhe">insert_chart</i>
+            <b>Faktoren:</b><br>
+            <ul>
+                <li>Similarity Faktor: {{ log.similarity_factor }}</li>
+                <li>Kontext Faktor: {{ log.context_factor }}</li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul class="collection with-header logging-table">
+        <li class="collection-header"><h4>Berechnete Antworten</h4></li>
+        <li class="collection-item">
+            <table class="highlight">
+                <thead>
+                <tr>
+                    <td><b>Frage (Matching)</b></td>
+                    <td><b>Zugeordnete Antwort</b></td>
+                    <td class="td-center"><b>Berechnete Ähnlichkeit</b></td>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for answer_set in answers %}
+                    <tr>
+
+                        <td>
+                            <span class="td-tooltip" data-position="top"
+                                  data-tooltip="{{ answer_set.question.question_text }}">
+                                <b>{{ answer_set.question.id }}</b> - {{ answer_set.question.question_text|truncatechars_html:100|safe }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="td-tooltip" data-position="top"
+                                  data-tooltip="{{ answer_set.answer.answer_text }}">
+                                <b>{{ answer_set.answer.id }}</b> - {{ answer_set.answer.answer_text|truncatechars_html:100|safe }}
+                            </span>
+                        </td>
+
+                        <td class="td-center">
+                            <b>{{ answer_set.simularity|floatformat:3 }}</b>
+                            {% if forloop.counter < 5 %}
+                                <span class="small badge accent-color">Ausgeliefert</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "admin_panel/js/logging_detail.js" %}"></script>
+{% endblock %}

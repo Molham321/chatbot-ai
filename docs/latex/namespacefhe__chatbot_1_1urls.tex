@@ -1,0 +1,52 @@
+\hypertarget{namespacefhe__chatbot_1_1urls}{}\doxysection{fhe\+\_\+chatbot.\+urls Namespace Reference}
+\label{namespacefhe__chatbot_1_1urls}\index{fhe\_chatbot.urls@{fhe\_chatbot.urls}}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{namespacefhe__chatbot_1_1urls_a1074cade802d3302414391c1d3a98e60}{app\+\_\+name}} = \textquotesingle{}fhe\+\_\+chatbot\textquotesingle{}
+\item 
+list \mbox{\hyperlink{namespacefhe__chatbot_1_1urls_ac0d06f6b11877e937c19c680ca2a167b}{urlpatterns}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}chatbot_logic URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacefhe__chatbot_1_1urls_a1074cade802d3302414391c1d3a98e60}\label{namespacefhe__chatbot_1_1urls_a1074cade802d3302414391c1d3a98e60}} 
+\index{fhe\_chatbot.urls@{fhe\_chatbot.urls}!app\_name@{app\_name}}
+\index{app\_name@{app\_name}!fhe\_chatbot.urls@{fhe\_chatbot.urls}}
+\doxysubsubsection{\texorpdfstring{app\_name}{app\_name}}
+{\footnotesize\ttfamily string fhe\+\_\+chatbot.\+urls.\+app\+\_\+name = \textquotesingle{}fhe\+\_\+chatbot\textquotesingle{}}
+
+\mbox{\Hypertarget{namespacefhe__chatbot_1_1urls_ac0d06f6b11877e937c19c680ca2a167b}\label{namespacefhe__chatbot_1_1urls_ac0d06f6b11877e937c19c680ca2a167b}} 
+\index{fhe\_chatbot.urls@{fhe\_chatbot.urls}!urlpatterns@{urlpatterns}}
+\index{urlpatterns@{urlpatterns}!fhe\_chatbot.urls@{fhe\_chatbot.urls}}
+\doxysubsubsection{\texorpdfstring{urlpatterns}{urlpatterns}}
+{\footnotesize\ttfamily list fhe\+\_\+chatbot.\+urls.\+urlpatterns}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  [}
+\DoxyCodeLine{2     path(\textcolor{stringliteral}{'admin/'}, admin.site.urls),}
+\DoxyCodeLine{3     path(\textcolor{stringliteral}{'chatbot/'}, include(\textcolor{stringliteral}{'chatbot\_logic.api.urls'}, \textcolor{stringliteral}{'chatbot\_api'})),}
+\DoxyCodeLine{4     path(\textcolor{stringliteral}{'logging/'}, include(\textcolor{stringliteral}{'chatbot\_logging.urls'}, \textcolor{stringliteral}{'logging\_api'})),}
+\DoxyCodeLine{5     path(\textcolor{stringliteral}{'adminpanel/'}, include(\textcolor{stringliteral}{'admin\_panel.urls'}, \textcolor{stringliteral}{'adminpanel'})),}
+\DoxyCodeLine{6 ]}
+
+\end{DoxyCode}

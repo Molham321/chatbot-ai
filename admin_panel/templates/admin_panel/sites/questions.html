@@ -1,0 +1,142 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="row logging-table">
+        <div class="col s12 z-depth-1">
+            <ul class="tabs">
+                <li class="tab col s4"><a class="active" href="#questions">Fragen</a></li>
+                <li class="tab col s4"><a href="#answers">Antworten</a></li>
+                <li class="tab col s4"><a href="#contexts">Kontexte</a></li>
+            </ul>
+        </div>
+        <div id="questions" class="col s12">
+            <table class="highlight logging-table">
+                <thead>
+                <tr>
+                    <td><b>ID</b></td>
+                    <td><b>Erstellt</b></td>
+                    <td><b>Frage</b></td>
+                    <td></td>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for question in questions %}
+                    <tr>
+                        <td><b>{{ question.id }}</b></td>
+                        <td>{{ question.created_at|date:"d.m.Y" }}</td>
+                        <td>{{ question.question_text|safe }}</td>
+                        <td class="align-right">
+                            <a href="{% url "admin_panel:admin_questions_edit" question_id=question.id %}"
+                               class="waves-effect waves-light btn-small"
+                               title="Bearbeiten">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a href="javascript:"
+                               class="btn-small toggle-button {% if question.active %}active{% endif %}"
+                               data-id="{{ question.id }}"
+                               data-type="question"
+                               title="{% if question.active %}Aktiv{% else %}Inaktiv{% endif %}">
+                                <i class="material-icons">power_settings_new</i>
+                            </a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <a href="{% url "admin_panel:admin_questions_create" %}" class="btn-floating btn-large create-button"><i
+                    class="material-icons">add</i></a>
+        </div>
+
+        <div id="answers" class="col s12">
+            <table class="highlight logging-table">
+                <thead>
+                <tr>
+                    <td><b>ID</b></td>
+                    <td><b>Erstellt</b></td>
+                    <td><b>Antwort</b></td>
+                    <td></td>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for answer in answers %}
+                    <tr>
+                        <td><b>{{ answer.id }}</b></td>
+                        <td>{{ answer.created_at|date:"d.m.Y" }}</td>
+                        <td>{{ answer.answer_text|truncatechars_html:100|safe }}</td>
+                        <td class="align-right">
+                            <a href="{% url "admin_panel:admin_answers_edit" answer_id=answer.id %}"
+                               class="waves-effect waves-light btn-small"
+                               title="Bearbeiten">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a href="javascript:"
+                               class="btn-small toggle-button {% if answer.active %}active{% endif %}"
+                               data-id="{{ answer.id }}"
+                               data-type="answer"
+                               title="{% if answer.active %}Aktiv{% else %}Inaktiv{% endif %}">
+                                <i class="material-icons">power_settings_new</i>
+                            </a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+
+            </table>
+
+            <a href="{% url "admin_panel:admin_answers_create" %}" class="btn-floating btn-large create-button"><i
+                    class="material-icons">add</i></a>
+        </div>
+
+        <div id="contexts" class="col s12">
+            <table class="highlight logging-table">
+                <thead>
+                <tr>
+                    <td><b>ID</b></td>
+                    <td><b>Erstellt</b></td>
+                    <td><b>Kontext</b></td>
+                    <td></td>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for context in contexts %}
+                    <tr>
+                        <td><b>{{ context.id }}</b></td>
+                        <td>{{ context.created_at|date:"d.m.Y" }}</td>
+                        <td>{{ context.context_text|safe }}</td>
+                        <td class="align-right">
+                            <a href="{% url "admin_panel:admin_contexts_edit" context_id=context.id %}"
+                               class="waves-effect waves-light btn-small"
+                               title="Bearbeiten">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            {% comment %} <a href=""
+                               class="waves-effect waves-light btn-small delete-button"
+                               title="Löschen">
+                                <i class="material-icons">close</i>
+                            </a>{% endcomment %}
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+
+            </table>
+
+            <a href="{% url "admin_panel:admin_contexts_create" %}" class="btn-floating btn-large create-button"><i
+                    class="material-icons">add</i></a>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "admin_panel/js/questions.js" %}"></script>
+{% endblock %}

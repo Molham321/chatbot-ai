@@ -1,0 +1,58 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+{% block nav %}{% endblock %}
+
+{% block content %}
+    <div class="login-form">
+        <div class="row">
+
+            <div class="row login-picture center-align">
+                <img alt="Logo der FH Erfurt" src="{% static "/admin_panel/gfx/FH_Erfurt_Logo.xml" %}">
+            </div>
+            <div class="row form-elements">
+                <form method="post" action="{% url "admin_panel:admin_login_user" %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col s4 offset-m4">
+                            <div class="row">
+                                <div class="input-field">
+                                    <input name="username" id="username" type="text" class="validate" autocomplete="off">
+                                    <label for="username">Benutzername</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field">
+                                    <input name="password" id="password" type="password" class="validate" autocomplete="off">
+                                    <label for="password">Passwort</label>
+                                </div>
+                            </div>
+                            <div class="row center-align">
+                                <button class="btn waves-effect waves-light btnSubmit" type="submit" name="action">
+                                    Einloggen
+                                    <i class="material-icons right">arrow_forward</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Element Showed -->
+        <a id="help-button" class="btn btn-floating btn-large"><i class="material-icons">help_outline</i></a>
+
+        <!-- Tap Target Structure -->
+        <div class="tap-target" data-target="help-button">
+            <div class="tap-target-content">
+                <h5 class="center-align">Wo bin ich hier?</h5>
+                <p>Dies ist der Adminbereich des Chatbots der Fachhochschule Erfurt. Zur Konfiguration des Chatbots
+                    loggen Sie sich bitte über das obige Formular in die Adminoberfläche ein.</p>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "admin_panel/js/login.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'admin_panel/layout.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="row content-row valign-wrapper">
+        <div class="col s4">
+            <div class="card large">
+                <div class="card-image">
+                    <img class="index-card-image" alt="Einstellungen" src="{% static "admin_panel/gfx/settings.svg" %}">
+                </div>
+                <div class="card-content">
+                    <p>In dieser Ansicht können wichtige Funktionen des Chatbots konfiguriert werden.</p>
+                </div>
+                <div class="card-action">
+                    <a href="{% url "admin_panel:admin_settings" %}"><i class="material-icons left accent-color">chevron_right</i>Einstellungen</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card large">
+                <div class="card-image">
+                    <img class="index-card-image" alt="Fragen" src="{% static "admin_panel/gfx/questions.svg" %}">
+                </div>
+                <div class="card-content">
+                    <p>In dieser Ansicht können Fragen bzw. die Antworten des Chatbots eingepflegt und bearbeitet werden.</p>
+                </div>
+                <div class="card-action">
+                    <a href="{% url "admin_panel:admin_questions" %}"><i class="material-icons left accent-color">chevron_right</i>Fragen & Antworten</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card large">
+                <div class="card-image">
+                    <img class="index-card-image" alt="Logging" src="{% static "admin_panel/gfx/logging.svg" %}">
+                </div>
+                <div class="card-content">
+                    <p>In dieser Ansicht können die erfassten Logs für die Unterhaltungen des Chatbots mit den Benutzern eingesehen und heruntergeladen werden.</p>
+                </div>
+                <div class="card-action">
+                    <a href="{% url "admin_panel:admin_logging" %}"><i class="material-icons left accent-color">chevron_right</i>Logging</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="row settings">
+        <div class="col s6 offset-m3">
+            <div class="row">
+                <form class="col s12">
+
+                    <div class="row">
+
+                        <div id="question_id" style="display: none" data-id="{{ question.id }}"></div>
+
+                        <div class="input-field col s12">
+                            <input type="text" name="question_text" id="question_text" class="validate"
+                                   value="{{ question.question_text }}">
+                            <label for="question_text">Frage</label>
+                        </div>
+
+                        <div class="input-field col s12">
+                            <select name="answer" id="answer">
+                                <option value="" disabled selected>Bitte wählen</option>
+                                {% for answer in answers %}
+                                    <option {% if answer.id == question.answer_id %}selected{% endif %} value="{{ answer.id }}">{{ answer.id }} - {{ answer.answer_text | truncatechars_html:70| safe }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="answer">Antwort</label>
+                        </div>
+
+                        <div class="input-field col s12">
+                            <select name="context" id="context">
+                                <option value="" disabled selected>Bitte wählen</option>
+                                {% for context in contexts %}
+                                    <option {% if context.id == question.context_id %}selected{% endif %} value="{{ context.id }}">{{ context.id }} - {{ context.context_text | truncatechars_html:70| safe }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="context">Kontext</label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s2 offset-m4">
+                                <a href="{% url "admin_panel:admin_questions" %}" class="btn">Zurück</a>
+                            </div>
+                            <div class="col s2">
+                                <a href="javascript:" id="saveBtnQuestion" class="btn">Speichern</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "admin_panel/js/edit.js" %}"></script>
+{% endblock %}

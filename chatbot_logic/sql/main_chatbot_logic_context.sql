@@ -1,0 +1,9 @@
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (2, '2020-09-01 12:49:07', '2020-09-01 10:59:57.416092', 'Zugangsvoraussetzungen');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (3, '2020-09-01 13:00:05', '2020-09-01 11:00:07.448044', 'Berufschancen');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (4, '2020-09-01 13:00:54', '2020-09-01 11:00:57.994082', 'Bewerbungs- und Einschreibungsprozess');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (6, '2020-09-01 13:01:11', '2020-09-01 11:01:21.230032', 'Möglichkeiten zur zeitlichen Gestaltung des Studiums');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (7, '2020-09-01 13:01:21', '2020-09-01 11:01:27.317794', 'Finanzierung des Studiums');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (8, '2020-09-01 13:01:27', '2020-09-01 11:01:32.557082', 'Wohnmöglichkeiten');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (9, '2020-09-01 13:01:32', '2020-09-01 11:01:45.591135', 'Lebensqualität auf dem Campus und in der Stadt');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (10, '2020-09-17 17:31:25', '2020-09-17 15:31:51.863434', 'Gestaltung der Studieneingangsphase');
+INSERT INTO chatbot_logic_context (id, created_at, modified_at, context_text) VALUES (11, '2020-09-25 15:25:27', '2020-09-25 13:25:36.421234', 'Profil und vermittelte Inhalte des Studiums');

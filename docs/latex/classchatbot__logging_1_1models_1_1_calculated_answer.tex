@@ -1,0 +1,91 @@
+\hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer}{}\doxysection{chatbot\+\_\+logging.\+models.\+Calculated\+Answer Class Reference}
+\label{classchatbot__logging_1_1models_1_1_calculated_answer}\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+Inheritance diagram for chatbot\+\_\+logging.\+models.\+Calculated\+Answer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classchatbot__logging_1_1models_1_1_calculated_answer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_abe72d6d9d73566c7baa1db3b0ee6f973}{save}} (self, $\ast$args, $\ast$$\ast$kwargs)
+\item 
+def \mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_afde15903b78cd2663ff78aefb927516b}{\+\_\+\+\_\+str\+\_\+\+\_\+}} (self)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_ada822715e9bf83870a3a8eedb754ef2f}{created\+\_\+at}} = models.\+Date\+Time\+Field(default=datetime.\+now, blank=True)
+\item 
+\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_af5943a22ea48ed3c6eedeafc42a0708e}{modified\+\_\+at}} = models.\+Date\+Time\+Field(auto\+\_\+now=True, blank=True)
+\item 
+\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_aec18452392d6f201b9e84b64c107186d}{answer}} = models.\+Foreign\+Key(\textquotesingle{}chatbot\+\_\+logic.\+Answer\textquotesingle{}, on\+\_\+delete=models.\+C\+A\+S\+C\+A\+DE, null=True)
+\item 
+\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_a5a93399ada358037ca0769a27f415d33}{question}} = models.\+Foreign\+Key(\textquotesingle{}chatbot\+\_\+logic.\+Question\textquotesingle{}, on\+\_\+delete=models.\+C\+A\+S\+C\+A\+DE, null=True)
+\item 
+\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_a7119171c3465db5f1528f93534736eeb}{chatbot\+\_\+log}} = models.\+Foreign\+Key(\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_chatbot_conversation_log}{Chatbot\+Conversation\+Log}}, on\+\_\+delete=models.\+S\+E\+T\+\_\+\+N\+U\+LL, null=True)
+\item 
+\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_calculated_answer_a9e40b879785e5d093e5fc3236d743acf}{simularity}} = models.\+Float\+Field(default=0.\+0)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_afde15903b78cd2663ff78aefb927516b}\label{classchatbot__logging_1_1models_1_1_calculated_answer_afde15903b78cd2663ff78aefb927516b}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!\_\_str\_\_@{\_\_str\_\_}}
+\index{\_\_str\_\_@{\_\_str\_\_}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{\_\_str\_\_()}{\_\_str\_\_()}}
+{\footnotesize\ttfamily def chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+\_\+\+\_\+str\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_abe72d6d9d73566c7baa1db3b0ee6f973}\label{classchatbot__logging_1_1models_1_1_calculated_answer_abe72d6d9d73566c7baa1db3b0ee6f973}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!save@{save}}
+\index{save@{save}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily def chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+save (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{$\ast$}]{args,  }\item[{$\ast$$\ast$}]{kwargs }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Save a CalculatedAnswer
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_aec18452392d6f201b9e84b64c107186d}\label{classchatbot__logging_1_1models_1_1_calculated_answer_aec18452392d6f201b9e84b64c107186d}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!answer@{answer}}
+\index{answer@{answer}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{answer}{answer}}
+{\footnotesize\ttfamily chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+answer = models.\+Foreign\+Key(\textquotesingle{}chatbot\+\_\+logic.\+Answer\textquotesingle{}, on\+\_\+delete=models.\+C\+A\+S\+C\+A\+DE, null=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_a7119171c3465db5f1528f93534736eeb}\label{classchatbot__logging_1_1models_1_1_calculated_answer_a7119171c3465db5f1528f93534736eeb}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!chatbot\_log@{chatbot\_log}}
+\index{chatbot\_log@{chatbot\_log}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{chatbot\_log}{chatbot\_log}}
+{\footnotesize\ttfamily chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+chatbot\+\_\+log = models.\+Foreign\+Key(\mbox{\hyperlink{classchatbot__logging_1_1models_1_1_chatbot_conversation_log}{Chatbot\+Conversation\+Log}}, on\+\_\+delete=models.\+S\+E\+T\+\_\+\+N\+U\+LL, null=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_ada822715e9bf83870a3a8eedb754ef2f}\label{classchatbot__logging_1_1models_1_1_calculated_answer_ada822715e9bf83870a3a8eedb754ef2f}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!created\_at@{created\_at}}
+\index{created\_at@{created\_at}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{created\_at}{created\_at}}
+{\footnotesize\ttfamily chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+created\+\_\+at = models.\+Date\+Time\+Field(default=datetime.\+now, blank=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_af5943a22ea48ed3c6eedeafc42a0708e}\label{classchatbot__logging_1_1models_1_1_calculated_answer_af5943a22ea48ed3c6eedeafc42a0708e}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!modified\_at@{modified\_at}}
+\index{modified\_at@{modified\_at}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{modified\_at}{modified\_at}}
+{\footnotesize\ttfamily chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+modified\+\_\+at = models.\+Date\+Time\+Field(auto\+\_\+now=True, blank=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_a5a93399ada358037ca0769a27f415d33}\label{classchatbot__logging_1_1models_1_1_calculated_answer_a5a93399ada358037ca0769a27f415d33}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!question@{question}}
+\index{question@{question}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{question}{question}}
+{\footnotesize\ttfamily chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+question = models.\+Foreign\+Key(\textquotesingle{}chatbot\+\_\+logic.\+Question\textquotesingle{}, on\+\_\+delete=models.\+C\+A\+S\+C\+A\+DE, null=True)\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classchatbot__logging_1_1models_1_1_calculated_answer_a9e40b879785e5d093e5fc3236d743acf}\label{classchatbot__logging_1_1models_1_1_calculated_answer_a9e40b879785e5d093e5fc3236d743acf}} 
+\index{chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}!simularity@{simularity}}
+\index{simularity@{simularity}!chatbot\_logging.models.CalculatedAnswer@{chatbot\_logging.models.CalculatedAnswer}}
+\doxysubsubsection{\texorpdfstring{simularity}{simularity}}
+{\footnotesize\ttfamily chatbot\+\_\+logging.\+models.\+Calculated\+Answer.\+simularity = models.\+Float\+Field(default=0.\+0)\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/jankl/\+Pycharm\+Projects/fhe\+\_\+chatbot/chatbot\+\_\+logging/\mbox{\hyperlink{chatbot__logging_2models_8py}{models.\+py}}\end{DoxyCompactItemize}

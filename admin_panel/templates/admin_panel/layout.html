@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Admin Panel</title>
+    <link rel="shortcut icon" type="image/png" href="{% static "admin_panel/gfx/favicon.ico" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "admin_panel/css/fontawesome.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "admin_panel/css/materialize.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "admin_panel/css/material-icons.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "admin_panel/css/style.css" %}"/>
+</head>
+<body>
+
+{% block nav %}
+    <nav>
+        <div class="nav-wrapper blue-grey lighten-4">
+            <a href="{% url "admin_panel:admin_index" %}" class="brand-logo">
+                <img alt="Logo der FH Erfurt" src="{% static "admin_panel/gfx/FH_Erfurt_Logo.xml" %}"/>
+                <span class="navigation-title">Chatbot Admin Panel</span>
+            </a>
+            {% if user.is_authenticated %}
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li class="fhe-color"><i class="material-icons left">person_outline</i> Eingeloggt als: {{ user.username }}</li>
+                    <li><a class="fhe-color" href="{% url "admin_panel:admin_logout_user" %}">Ausloggen</a></li>
+                </ul>
+            {% endif %}
+        </div>
+    </nav>
+{% endblock %}
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script src="{% static "admin_panel/js/materialize.min.js" %}"></script>
+
+{% block scripts %}
+{% endblock %}
+
+</body>
+</html>

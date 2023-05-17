@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="Chatbot der Angewandten Informatik der Fachhochschule Erfurt">
+    <meta name="author" content="Fachhochschule Erfurt">
+    <meta name="publisher" content="Fachhochschule Erfurt">
+    <meta name="copyright" content="Fachhochschule Erfurt">
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/material-icons.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/materialize.min.css" %}" media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/style.css" %}">
+
+
+    <title>Chatbot</title>
+</head>
+
+<body class="disable-scrollbars">
+
+{% include 'chatbot_logic/chatbot_content.html' with settings=settings %}
+
+<script type="text/javascript" src="{% static "chatbot_logic/js/materialize.min.js" %}"></script>
+<script src="{% static "chatbot_logic/js/bot.js" %}"></script>
+</body>
+
+</html>

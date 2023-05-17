@@ -1,0 +1,84 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+
+    <a href="{% url "admin_panel:admin_logging_download" %}"
+       target="_blank"
+       class="waves-effect waves-light btn-small download-btn">
+        <i class="material-icons right">cloud_download</i>
+        Alle Logs als PDF herunterladen
+    </a>
+
+    <table class="highlight logging-table">
+        <thead>
+        <tr>
+            <th>Datum / Uhrzeit</th>
+            <th>Frage</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% if not logs %}
+            <tr>
+                <td>Keine Logs vorhanden</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        {% endif %}
+
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.created_at|date:"D d. M Y - H:i:s" }}</td>
+                <td>{{ log.asked_question }}</td>
+                <td class="align-right">
+                    <a href="{% url "admin_panel:admin_logging_detail" log_id=log.id %}"
+                       class="waves-effect waves-light btn-small">
+                        <i class="material-icons right">send</i>
+                        Log ansehen
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {% if paginator.num_pages > 0 %}
+
+        <ul class="pagination">
+
+            {% if logs.has_previous %}
+                <li class="waves-effect"><a
+                        href="{% url "admin_panel:admin_logging" %}?page={{ logs.previous_page_number }}"><i
+                        class="material-icons">chevron_left</i></a></li>
+            {% else %}
+                <li class="disabled"><a
+                        href="#"><i
+                        class="material-icons">chevron_left</i></a></li>
+            {% endif %}
+
+            {% for page in paginator.page_range %}
+                <li class="waves-effect {% if page == currentPage %}active{% endif %}"><a
+                        href="{% url "admin_panel:admin_logging" %}?page={{ page }}">{{ page }}</a></li>
+            {% endfor %}
+
+            {% if logs.has_next %}
+                <li class="waves-effect"><a
+                        href="{% url "admin_panel:admin_logging" %}?page={{ logs.next_page_number }}"><i
+                        class="material-icons">chevron_right</i></a>
+                </li>
+            {% else %}
+                <li class="disabled"><a
+                        href="#"><i
+                        class="material-icons">chevron_right</i></a></li>
+            {% endif %}
+
+        </ul>
+
+    {% endif %}
+
+
+{% endblock %}

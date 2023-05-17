@@ -1,0 +1,231 @@
+body {
+    overflow-y: scroll;
+    color: #334d66;
+}
+
+.flex {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+.container {
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+    font-size: 10pt;
+    animation: slideInLeft;
+    animation-duration: 1.5s;
+}
+
+.container.bot {
+    animation: slideInRight;
+    animation-duration: 1.5s;
+}
+
+
+.wobble {
+    animation: headShake ease-in-out;
+    animation-duration: 1s;
+    animation-iteration-count:infinite;
+}
+
+.hinge {
+    animation: hinge;
+    animation-duration: 2s;
+}
+
+.row.no-margin {
+    margin-bottom: 0 !important;
+}
+
+/* Darker chat container */
+
+.darker {
+    border-color: #334d66;
+    background-color: #ecf6ff;
+    text-align: right;
+}
+
+/* Clear floats */
+
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Style images */
+
+.avatar-image {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    border-radius: 50%;
+}
+
+
+/* Style the right image */
+
+.container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+/* Style time text */
+
+.time-right {
+    float: right;
+    font-size: 10pt;
+    color: #FFFFFF !important;
+    padding: 0 10px 10px 0;
+}
+
+/* Style time text */
+
+.time-left {
+    float: left;
+    font-size: 10pt;
+    color: #FFFFFF !important;
+    padding: 0 10px 10px 0;
+}
+
+.more-information-wrapper {
+    position: fixed;
+    right: 0;
+    top: 45%;
+    width: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid lightgray;
+    text-align: center;
+    color: #334d66;
+    background-color: white;
+}
+
+.input-message {
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    background-color: white;
+}
+
+.send-button:hover {
+    background-color: #ecf6ff;
+}
+
+.clear {
+    clear: both;
+}
+
+.chat-wrapper {
+    padding-bottom: 20%;
+}
+
+.container.faded-out {
+    opacity: 0;
+}
+
+.container-text {
+    border-radius: 5px 15px 15px 15px;
+    color: white;
+    background-color: rgba(51, 77, 102, 0.9);
+    padding: 10px;
+}
+
+.container-text > p {
+    margin: 0;
+    padding: 10px 10px 0 10px;
+    word-wrap: break-word;
+}
+
+.container-text.user {
+    border-radius: 15px 5px 15px 15px;
+    background-color: rgba(204, 0, 82, 0.9);
+    padding: 10px;
+}
+
+.fhe-color {
+    background-color: rgba(51, 77, 102, 0.9) !important;
+}
+
+/* textarea label focus color */
+.input-field textarea:focus + label {
+    color: rgba(51, 77, 102, 0.9) !important;
+}
+
+/* textarea label underline focus color */
+.input-field textarea:focus {
+    border-bottom: 1px solid rgba(51, 77, 102, 0.9) !important;
+    box-shadow: 0 1px 0 0 rgba(51, 77, 102, 0.9) !important;
+}
+
+.disable-scrollbars::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+}
+
+.disable-scrollbars {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    overflow-x: hidden;
+    padding-right: 5%;
+}
+
+.more-information-container {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 60%;
+    left: 95%;
+    bottom: 25%;
+    background-color: rgba(51, 77, 102, 0.95);
+    transition: 0.5s ease;
+}
+
+.more-information-container.active {
+    left:0;
+    transition: 0.5s ease;
+}
+
+.overlayClose {
+    color: white;
+    position: absolute;
+    right: 95%;
+    height: 100%;
+}
+
+#toggle-icon {
+    top: 45%;
+}
+
+.questions-container {
+    padding: 7%;
+}
+
+.question {
+    background-color: rgba(204, 0, 82, 1);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.questions-header {
+    margin-bottom: 30px;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.no-click {
+    pointer-events: none;
+}
+
+.progress {
+    background-color: lightgrey;
+}
+
+.progress>div{
+    background-color: rgba(51, 77, 102, 1) !important;
+}

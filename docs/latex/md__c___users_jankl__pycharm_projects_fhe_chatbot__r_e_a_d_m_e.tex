@@ -1,0 +1,49 @@
+This repository is used for the F\+H\+E-\/\+AI Chatbot implementation.\hypertarget{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md1}{}\doxysection{Project Setup}\label{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md1}
+
+\begin{DoxyItemize}
+\item Git installed
+\begin{DoxyItemize}
+\item \href{https://git-scm.com/downloads}{\texttt{ Git download}}
+\end{DoxyItemize}
+\item Django 3.\+1
+\item Python 3.\+8.\+x {\bfseries{64-\/bit}}
+\begin{DoxyItemize}
+\item \href{https://www.python.org/downloads/}{\texttt{ Python Download}}
+\begin{DoxyItemize}
+\item Get the 64-\/Bit version ! (needed for the spacy package)
+\end{DoxyItemize}
+\item Make sure to \char`\"{}add python to enviroment variables\char`\"{} (Checkbox while installation)
+\end{DoxyItemize}
+\item pipenv installed
+\begin{DoxyItemize}
+\item \href{https://pypi.org/project/pipenv/}{\texttt{ pipenv}}
+\item {\ttfamily pipenv run} before each command to run commands within the virtual enviroment
+\end{DoxyItemize}
+\item Working with Django R\+E\+ST Framework
+\end{DoxyItemize}\hypertarget{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md2}{}\doxysection{Installing / Usage}\label{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md2}
+
+\begin{DoxyItemize}
+\item Open Project folder and run {\ttfamily pipenv install} at a console
+\begin{DoxyItemize}
+\item This will create a virtual enviroment and install all dependencies from the pipfile
+\end{DoxyItemize}
+\item Download nltk and spacy resources\+:
+\begin{DoxyItemize}
+\item run {\ttfamily python -\/m nltk.\+downloader all}
+\item run {\ttfamily python -\/m spacy download de\+\_\+core\+\_\+news\+\_\+md}
+\item Note that you might have to prepend {\ttfamily pipenv run} to run these commands inside our virtual environment in which the dependencies are installed.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md3}{}\doxysection{Authors}\label{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md3}
+
+\begin{DoxyItemize}
+\item {\bfseries{Abdul Samet Ankaoglu}}
+\item {\bfseries{Andrej Bespalov}}
+\item {\bfseries{Jan Kloß}}
+\item {\bfseries{Christopher Lippek}}
+\item {\bfseries{Christian Ortlepp}}
+\item {\bfseries{Lukas Bachmann}}
+\item {\bfseries{Sebastian Heine}}
+\end{DoxyItemize}\hypertarget{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md4}{}\doxysection{License}\label{md__c___users_jankl__pycharm_projects_fhe_chatbot__r_e_a_d_m_e_autotoc_md4}
+Copyright (C) Yggdrasil
+
+All rights reserved. 
