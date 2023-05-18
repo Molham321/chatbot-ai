@@ -1,0 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url('./images/AI.png');
+  background-repeat: no-repeat;
+  font-family: Arial, sans-serif;
+}
+
+.chatbot {
+  display: block;
+  background-color: rgba(128, 128, 128, 0.8);
+  width: 350px;
+  height: 500px;
+  margin-bottom: 60px;
+  border: 1px solid lightgray;
+}
+
+.togeelChatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #73AD21;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+i.fa-regular.fa-comments {
+  color: white;
+  font-size: 30px;
+}
+
+.fixed {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  border: 3px solid #73AD21;
+}
+
+.content {
+  height: 3000px;
+}

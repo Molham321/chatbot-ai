@@ -8,12 +8,29 @@
     <meta name="author" content="Fachhochschule Erfurt">
     <meta name="publisher" content="Fachhochschule Erfurt">
     <meta name="copyright" content="Fachhochschule Erfurt">
+      <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Chatbot Test</title>
 </head>
 
 <body>
-<iframe src="http://127.0.0.1:8000/chatbot/" width="450px" height="600px" name="Test"
-        style="border:1px solid lightgray;"></iframe>
+  <div class="chatbot fixed">
+    <iframe src="http://127.0.0.1:8080/chatbot/" width="350px" height="500px" name="Test"
+      style="border:1px solid lightgray;">
+
+    </iframe>
+  </div>
+
+  <div class="togeelChatbot fixed">
+    <i class="fa-regular fa-comments"></i>
+  </div>
+
+  <div class="content"></div>
+
 </body>
+
+<script src="./script.js"></script>
 
 </html>
