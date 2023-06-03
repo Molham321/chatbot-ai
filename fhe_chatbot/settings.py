@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'chatbot_logic.apps.ChatbotLogicConfig',
     'chatbot_logging.apps.ChatbotLoggingConfig',
     'admin_panel.apps.AdminPanelConfig',
@@ -138,3 +139,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+ASGI_APPLICATION = "chatbot_logic.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
+}

@@ -2,7 +2,9 @@
  * Question request url.
  * @type {string}
  */
+const SESSION_URL = "/chatbot/instantiate_session/"
 const REQUEST_URL = "/chatbot/question/"
+const WEBSOCKET_URL = "/ws/chat/"
 
 /**
  * String which defines the bot type for message rendering.
@@ -69,6 +71,8 @@ var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
 var overlay = document.querySelector('.more-information-container');
 
+let webSocket;
+
 document.addEventListener("DOMContentLoaded", function (event) {
 
     var sendButton = document.getElementById('send-button');
@@ -92,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             renderMessage(TYPE_USER, text);
 
             // Fetch question and display it
-            sendRequestToApi(text);
+            sendRequestToSocket(text);
         } else {
             // Check for easter egg
             easterEgg(sendButton);
@@ -135,11 +139,60 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 renderMessage(TYPE_USER, question);
 
                 // Fetch question and display it
-                sendRequestToApi(question);
+                sendRequestToSocket(question);
             }
         });
     });
+
+    instantiateSession()
+        .then((session) => {
+            webSocket = new WebSocket("ws://" + window.location.host + WEBSOCKET_URL + session.token + "/");
+
+            webSocket.onmessage = onWebSocketMessage;
+        })
 });
+
+function instantiateSession() {
+    return new Promise((resolve) => {
+        fetch(SESSION_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': API_KEY,
+            }
+        }).then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                renderMessage(TYPE_BOT, ERROR_MESSAGE);
+            }
+        }).then(data => resolve(data))
+    })
+}
+
+function onWebSocketMessage(event) {
+    const data = JSON.parse(event.data);
+
+    let sender = TYPE_USER;
+    let type = data.type || 'reply';
+
+    if(data.sender === 'bot')
+        sender = TYPE_BOT;
+
+    if(type === 'reply') {
+        renderMessage(sender, data.message);
+        toggleProcessing(false);
+
+        renderAssumedAnswers(data.answer.assumed_answers);
+
+        if(firstQuestion) {
+            toggleWobble(true);
+            firstQuestion = false;
+        }
+    } else if(type === 'loading') {
+        toggleProcessing(true);
+    }
+}
 
 /**
  * Renders a message either from the user or bot perspective.
@@ -188,51 +241,18 @@ function renderMessage(type, text) {
  * Sends the ser question to the chatbot API and processes its response
  * @param _text
  */
-function sendRequestToApi(_text) {
+function sendRequestToSocket(_text) {
 
     // Prepare POST body data
     let body = {
-        'question': _text,
+        'message': _text,
+        'sender': 'user'
     };
 
     // Activate preloading animation
     toggleProcessing(true);
 
-    // Fetch answers from API
-    fetch(REQUEST_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-            'Authorization': API_KEY,
-        },
-        body: JSON.stringify(body),
-    }).then(function (response) {
-
-        // Only proceed in case a valid response is returned
-        if (response.ok) {
-            // Pass response
-            return response.json();
-        } else {
-            // Render error message
-            renderMessage(TYPE_BOT, ERROR_MESSAGE);
-        }
-    }).then(data => {
-        // Render the bot message
-        renderMessage(TYPE_BOT, data.answer.answer_text);
-        // render assumed answers in side menu
-        renderAssumedAnswers(data.assumed_answers);
-    }).finally(function () {
-        // Disable preloading animation
-        toggleProcessing(false);
-
-        // Only in case the first question was processed
-        if (firstQuestion) {
-            // Activate attention animation for assumed answers
-            toggleWobble(true);
-            firstQuestion = false;
-        }
-    });
+    webSocket.send(JSON.stringify(body));
 }
 
 /**

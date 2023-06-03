@@ -13,6 +13,9 @@ spacy = "==2.3.2"
 nltk = "==3.5"
 sphinx = "==3.2.1"
 xhtml2pdf = "*"
+channels = "*"
+asgiref = "*"
+daphne = "*"
 
 [requires]
 python_version = "3.8.5"
