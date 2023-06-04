@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'daphne',
+    'channels',
     'chatbot_logic.apps.ChatbotLogicConfig',
     'chatbot_logging.apps.ChatbotLoggingConfig',
     'admin_panel.apps.AdminPanelConfig',
@@ -146,3 +147,5 @@ CHANNEL_LAYERS = {
         'BACKEND': "channels.layers.InMemoryChannelLayer"
     }
 }
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
