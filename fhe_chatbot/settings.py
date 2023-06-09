@@ -37,6 +37,8 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'chatbot_logic.apps.ChatbotLogicConfig',
     'chatbot_logging.apps.ChatbotLoggingConfig',
     'admin_panel.apps.AdminPanelConfig',
@@ -138,3 +140,12 @@ REST_FRAMEWORK = {
     ],
 }
 
+ASGI_APPLICATION = "chatbot_logic.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

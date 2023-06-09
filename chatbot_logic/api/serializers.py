@@ -14,3 +14,8 @@ class AnswerSetSerializer(serializers.Serializer):
     assumed_answers = serializers.ListField(
         child=AnswerItemSerializer()
     )
+
+
+class ChatSessionSerializer(serializers.Serializer):
+    token = serializers.CharField(required=True, allow_blank=False)
+    created_at = serializers.DateTimeField()
