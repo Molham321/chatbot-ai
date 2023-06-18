@@ -3,6 +3,17 @@ from datetime import datetime
 
 # Create your models here.
 
+class BotChat(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    email = models.EmailField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        """
+        Save a ConversationLog
+        """
+        super(BotChat, self).save(*args, **kwargs)
+
 class ChatbotConversationLog (models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     asked_question = models.CharField(max_length=300)
