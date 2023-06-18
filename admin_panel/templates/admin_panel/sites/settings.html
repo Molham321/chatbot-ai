@@ -70,6 +70,35 @@
             </div>
 
         </li>
+
+        <li>
+            <div class="collapsible-header"><i class="accent-color material-icons">email</i>E-Mail-Einstellungen</div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <form class="col s9">
+                        <div class="row">
+                            <div class="input-field col s8">
+                                <input type="number" name="mail-timeout" id="mail-timeout" class="validate" value="{{ settings.mail_timeout_in_seconds }}">
+                                <label for="mail-timeout" class="input-field-label">Timeout für Mail-Versand-Vorschlag</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s8">
+                                <input type="number" name="similarity-threshold" id="similarity-threshold" class="validate" value="{{ settings.similarity_mail_threshold }}">
+                                <label for="similarity-threshold" class="input-field-label">Qualitätsschwellwert für Chatbot Antworten</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s8">
+                                <input type="number" name="quality-test-answers" id="quality-test-answers" class="validate" value="{{ settings.number_of_quality_test_answers }}">
+                                <label for="quality-test-answers" class="input-field-label">Anzahl der zu prüfenden Chatbot Antworten</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </li>
+
     </ul>
 
     <div class="row">

@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -116,3 +116,40 @@ class ChatSession(models.Model):
 
     class Meta:
         verbose_name_plural = "Chat Sessions"
+
+class ManualChat(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    modified_at = models.DateTimeField(auto_now=True, blank=True)
+    chat_session = models.ForeignKey(ChatSession, null = True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        """
+        Save a Keyword
+        """
+        super(ManualChat, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Manual Chat"
+
+    class Meta:
+        verbose_name_plural = "manualChats"
+
+class ChatMessage(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    modifier_at = models.DateTimeField(auto_now=True, blank=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    chat = models.ForeignKey(ManualChat, on_delete=models.CASCADE)
+    message = models.CharField(max_length=600)
+
+    def save(self, *args, **kwargs):
+        """
+        Save a Keyword
+        """
+        super(ChatMessage, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Chat Message"
+
+    class Meta:
+        verbose_name_plural = "Chat Messages"
