@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Answer(models.Model):
@@ -117,34 +118,50 @@ class ChatSession(models.Model):
     class Meta:
         verbose_name_plural = "Chat Sessions"
 
-class ManualChat(models.Model):
+
+class Chat(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     modified_at = models.DateTimeField(auto_now=True, blank=True)
-    chat_session = models.ForeignKey(ChatSession, null = True, on_delete=models.CASCADE)
+    chat_session = models.ForeignKey(ChatSession, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         """
-        Save a Keyword
+        Save a Chat
         """
-        super(ManualChat, self).save(*args, **kwargs)
+        super(Chat, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "Manual Chat"
+        return "Chat"
 
     class Meta:
-        verbose_name_plural = "manualChats"
+        verbose_name_plural = "Chats"
+
+
+class EmailSupport(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    chat_session = models.ForeignKey(ChatSession, null=True, on_delete=models.CASCADE)
+    email = models.EmailField()
+
+    def save(self, *args, **kwargs):
+        """
+        Save a Email support
+        """
+        super(EmailSupport, self).save(*args, **kwargs)
+
 
 class ChatMessage(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     modifier_at = models.DateTimeField(auto_now=True, blank=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    chat = models.ForeignKey(ManualChat, on_delete=models.CASCADE)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     message = models.CharField(max_length=600)
+    from_guest = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         """
-        Save a Keyword
+        Save a Chat message
         """
         super(ChatMessage, self).save(*args, **kwargs)
 
