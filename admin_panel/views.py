@@ -151,6 +151,10 @@ def save_settings_view(request):
                 settings.similarity_factor = data["similarity_factor"]
                 settings.context_factor = data["context_factor"]
                 settings.matching_method = data["matching_method"]
+                settings.mail_timeout_in_seconds = data["mail_timeout"]
+                settings.similarity_mail_threshold = data["similarity_threshold"]
+                settings.number_of_quality_test_answers = data["quality_test_answers"]
+
                 settings.save()
                 return_data['toast_html'] = 'Einstellungen gespeichert'
             else:

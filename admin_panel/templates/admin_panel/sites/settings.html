@@ -84,7 +84,7 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s8">
-                                <input type="number" name="similarity-threshold" id="similarity-threshold" class="validate" value="{{ settings.similarity_mail_threshold }}">
+                                <input type="number" name="similarity-threshold" id="similarity-threshold" class="validate" step="0.1" value="{{ settings.similarity_mail_threshold|stringformat:".2f" }}">
                                 <label for="similarity-threshold" class="input-field-label">Qualitätsschwellwert für Chatbot Antworten</label>
                             </div>
                         </div>
