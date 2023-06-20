@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="row content-row valign-wrapper">
-        <div class="col s4">
+        <div class="col s3">
             <div class="card large">
                 <div class="card-image">
                     <img class="index-card-image" alt="Einstellungen" src="{% static "admin_panel/gfx/settings.svg" %}">
@@ -16,7 +16,20 @@
                 </div>
             </div>
         </div>
-        <div class="col s4">
+        <div class="col s3">
+            <div class="card large">
+                <div class="card-image">
+                    <img class="index-card-image" alt="Einstellungen" src="{% static "admin_panel/gfx/chat.png" %}">
+                </div>
+                <div class="card-content">
+                    <p>In dieser Ansicht können Fragen von Besuchern live beantwortet und alte Verläufe verwaltet werden.</p>
+                </div>
+                <div class="card-action">
+                    <a href="{% url "admin_panel:admin_chat" %}"><i class="material-icons left accent-color">chevron_right</i>Chats</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s3">
             <div class="card large">
                 <div class="card-image">
                     <img class="index-card-image" alt="Fragen" src="{% static "admin_panel/gfx/questions.svg" %}">
@@ -29,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="col s4">
+        <div class="col s3">
             <div class="card large">
                 <div class="card-image">
                     <img class="index-card-image" alt="Logging" src="{% static "admin_panel/gfx/logging.svg" %}">

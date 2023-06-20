@@ -445,3 +445,16 @@ def log_download_view(request):
         return HttpResponse(response.getvalue(), content_type='application/pdf')
     else:
         return redirect('admin_panel:admin_login')
+
+
+def chats_view(request):
+    """
+    Renders the Chat Overview template and returns it as HttpResponse.
+    :param request: Passed django request object.
+    :return: Returns an HttpResponse.
+    """
+    if request.user.is_authenticated:
+        return render(request, 'admin_panel/sites/chats.html',
+                      {})
+    else:
+        return redirect('admin_panel:admin_login')
