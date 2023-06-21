@@ -29,12 +29,19 @@ saveBtn.onclick = function () {
     let context = document.getElementById('context').value;
     let algorithm = document.querySelector('input[name=matching-method]:checked').value;
 
+    let mailTimeout = document.getElementById('mail-timeout').value;
+    let similarityThreshold = document.getElementById('similarity-threshold').value;
+    let qualityTestAnswers = document.getElementById('quality-test-answers').value;
+
     let data = {
         'greeting_text': greeting,
         'noanswer_text': noanswer,
         'similarity_factor': similarity,
         'context_factor': context,
         'matching_method': algorithm,
+        'mail_timeout': mailTimeout,
+        'similarity_threshold': similarityThreshold,
+        'quality_test_answers': qualityTestAnswers
     }
 
     console.log(data);
