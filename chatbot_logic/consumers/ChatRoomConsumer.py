@@ -31,34 +31,37 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         self.match_controller = None
         self.chat_sessions = None
         self.settings = None
-        self.session = None
+        self.session_token = None
+        self.chat_session = None
+        self.chat = None
 
     async def connect(self):
-        self.session = self.scope["url_route"]["kwargs"]["session"]
+        self.session_token = self.scope["url_route"]["kwargs"]["session"]
 
         self.chat_sessions = ChatSessions()
 
-        chat_session = self.retrieve_session(self.session)
+        chat_session = await self.retrieve_session(self.session_token)
 
         if chat_session is None:
             await self.close()
         else:
+            self.chat_session = chat_session
             self.settings = await get_settings()
             self.match_controller = MatchController()
 
-            await self.channel_layer.group_add(self.session, self.channel_name)
+            await self.channel_layer.group_add(self.session_token, self.channel_name)
 
             await self.accept()
 
             await self.channel_layer.group_send(
-                self.session,
+                self.session_token,
                 {
                     "type": "greeting_message"
                 }
             )
 
     async def disconnect(self, code):
-        await self.channel_layer.group_discard(self.session, self.channel_name)
+        await self.channel_layer.group_discard(self.session_token, self.channel_name)
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
@@ -68,8 +71,11 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         if "sender" in text_data_json and text_data_json["sender"] == "bot":
             return
 
+        chat = await self.get_chat()
+        await self.chat_sessions.store_message(chat, message)
+
         await self.channel_layer.group_send(
-            self.session,
+            self.session_token,
             {
                 "type": "ask_question",
                 "question": message
@@ -94,6 +100,12 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     def retrieve_session(self, token):
         return self.chat_sessions.get_session(token)
 
+    async def get_chat(self):
+        if self.chat is None:
+            self.chat = await self.chat_sessions.instantiate_chat(self.chat_session)
+
+        return self.chat
+
     async def ask_question(self, event):
         question = event["question"]
 
@@ -112,6 +124,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         message = answer.answer.answer_text
 
+        chat = await self.get_chat()
+        await self.chat_sessions.store_message(chat, message, False)
+
         await self.send(
             text_data=json.dumps(
                 {
@@ -122,3 +137,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 }
             )
         )
+
+#    async def instantiate_chat(self, chat_session):
+#        existing_chat = 
