@@ -3,7 +3,60 @@
 
 {% block content %}
     <div>
-        Sitzungen werden geladen
+        <table class="highlight logging-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Anzahl Nachrichten</th>
+                    <th>Mitarbeiter</th>
+                    <th>Erstellungsdatum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chat in chats.object_list %}
+                    <tr>
+                        <td>
+                            {{ chat.id }}
+                        </td>
+                        <td>
+                            {{ chat.chatmessage_set.all.count }} Nachrichten
+                        </td>
+                        <td>
+                            {% if chat.user.id is not None %}
+                                {{ chat.user.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ chat.created_at }}
+                        </td>
+                    </tr>
+                {% endfor %} 
+            </tbody>
+        </table>
+
+        {{ chats.num_pages }}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if chats.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ chats.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ chats.number }} of {{ chats.paginator.num_pages }} -
+                    Total: {{ chats.paginator.count }}
+                </span>
+
+                {% if chats.has_next %}
+                <a href="?page={{ chats.next_page_number }}">next</a>
+                <a href="?page={{ chats.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        
     </div>
 {% endblock %}
 

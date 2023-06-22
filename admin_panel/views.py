@@ -11,6 +11,7 @@ from xhtml2pdf import pisa
 from admin_panel.models import AdminSettings
 from chatbot_logging.models import ChatbotConversationLog, CalculatedAnswer
 from chatbot_logic.models import Question, Answer, Context
+from chatbot_logic.classes.ChatSessions import ChatSessions
 
 
 def index_view(request):
@@ -458,7 +459,16 @@ def chats_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        page = request.GET.get('page', 1)
+
+        chat_sessions = ChatSessions()
+        chats = chat_sessions.get_chats(page=page)
+
+        print(chats)
+
         return render(request, 'admin_panel/sites/chats.html',
-                      {})
+                      {
+                          'chats': chats
+                          })
     else:
         return redirect('admin_panel:admin_login')
