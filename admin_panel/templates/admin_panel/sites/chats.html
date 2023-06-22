@@ -5,34 +5,42 @@
     <div>
         <table class="highlight logging-table">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Anzahl Nachrichten</th>
-                    <th>Mitarbeiter</th>
-                    <th>Erstellungsdatum</th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>Anzahl Nachrichten</th>
+                <th>Mitarbeiter</th>
+                <th>Erstellungsdatum</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
-                {% for chat in chats.object_list %}
-                    <tr>
-                        <td>
-                            {{ chat.id }}
-                        </td>
-                        <td>
-                            {{ chat.chatmessage_set.all.count }} Nachrichten
-                        </td>
-                        <td>
-                            {% if chat.user.id is not None %}
-                                {{ chat.user.username }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {{ chat.created_at }}
-                        </td>
-                    </tr>
-                {% endfor %} 
+            {% for chat in chats.object_list %}
+                <tr>
+                    <td>
+                        {{ chat.id }}
+                    </td>
+                    <td>
+                        {{ chat.chatmessage_set.all.count }} Nachrichten
+                    </td>
+                    <td>
+                        {% if chat.user.id is not None %}
+                            {{ chat.user.username }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ chat.created_at }}
+                    </td>
+                    <td>
+                        <a href="{% url "admin_panel:admin_chat_details" chat_id=chat.id %}"
+                           class="waves-effect waves-light btn-small"
+                           title="Bearbeiten">
+                            <i class="material-icons">forum</i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 
@@ -41,8 +49,8 @@
         <div class="pagination">
             <span class="step-links">
                 {% if chats.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ chats.previous_page_number }}">previous</a>
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ chats.previous_page_number }}">previous</a>
                 {% endif %}
 
                 <span class="current">
@@ -51,12 +59,12 @@
                 </span>
 
                 {% if chats.has_next %}
-                <a href="?page={{ chats.next_page_number }}">next</a>
-                <a href="?page={{ chats.paginator.num_pages }}">last &raquo;</a>
+                    <a href="?page={{ chats.next_page_number }}">next</a>
+                    <a href="?page={{ chats.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
             </span>
         </div>
-        
+
     </div>
 {% endblock %}
 

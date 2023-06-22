@@ -51,7 +51,10 @@ class ChatSessions(metaclass=Singleton):
 
         chat_message.save()
 
-    def get_chats(self, limit=2, page=1):
+    def get_chats(self, limit=10, page=1):
         query = Chat.objects.order_by('-created_at').all()
 
         return Paginator(query, limit).page(page)
+
+    def get_chat(self, chat_id):
+        return Chat.objects.get(id=chat_id)

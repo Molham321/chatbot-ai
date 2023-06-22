@@ -464,11 +464,27 @@ def chats_view(request):
         chat_sessions = ChatSessions()
         chats = chat_sessions.get_chats(page=page)
 
-        print(chats)
-
         return render(request, 'admin_panel/sites/chats.html',
                       {
                           'chats': chats
-                          })
+                      })
+    else:
+        return redirect('admin_panel:admin_login')
+
+
+def chat_detail_view(request, chat_id):
+    """
+    Renders the Chat Detail template and returns it as HttpResponse.
+    :param request: Passed django request object.
+    :return: Returns an HttpResponse.
+    """
+    if request.user.is_authenticated:
+        chat_sessions = ChatSessions()
+        chat = chat_sessions.get_chat(chat_id=chat_id)
+
+        return render(request, 'admin_panel/sites/chat_details.html',
+                      {
+                          'chat': chat
+                      })
     else:
         return redirect('admin_panel:admin_login')

@@ -1,0 +1,51 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+    <div>
+        <h4>Chat-Sitzung</h4>
+        <table class="highlight logging-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Absender</th>
+                <th>Uhrzeit</th>
+                <th>Nachricht</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for message in chat.chatmessage_set.all %}
+                <tr>
+                    <td>
+                        {{ message.id }}
+                    </td>
+                    <td>
+                        {% if message.from_guest %}
+                            Besucher
+                        {% elif message.user.id is not None %}
+                            {{ chat.user.username }}
+                        {% else %}
+                            Chatbot
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ message.created_at.time }}
+                    </td>
+                    <td>
+                        {{ message.message }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row" style="margin-top: 1rem">
+            <div class="col s2 offset-m4">
+                <a href="{% url "admin_panel:admin_chat" %}" class="btn">Zurück</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
