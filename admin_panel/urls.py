@@ -28,6 +28,7 @@ urlpatterns = [
     path('logging/download/', views.log_download_view, name='admin_logging_download'),
     path('logging/<log_id>/', views.logging_detail_view, name='admin_logging_detail'),
     path('questions/', views.questions_view, name='admin_questions'),
+    path('chats/', views.chats_view, name='admin_chat'),
 
     path('questions/edit/<question_id>/', views.edit_questions_view, name='admin_questions_edit'),
     path('questions/edit/<question_id>/save/', views.save_questions_view, name='admin_questions_save'),
