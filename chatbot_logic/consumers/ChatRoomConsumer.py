@@ -1,11 +1,13 @@
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
+
 from asgiref.sync import sync_to_async
-from admin_panel.models import AdminSettings
-from chatbot_logic.controllers.MatchController import MatchController
-from chatbot_logic.classes.ChatSessions import ChatSessions
-from chatbot_logic.api.serializers import AnswerSetSerializer
 from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+from admin_panel.models import AdminSettings
+from chatbot_logic.api.serializers import AnswerSetSerializer
+from chatbot_logic.classes.ChatSessions import ChatSessions
+from chatbot_logic.controllers.MatchController import MatchController
 
 
 @database_sync_to_async
@@ -60,19 +62,56 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+            # if self.scope["user"].is_authenticated:
+            #     current_chat = ChatSessions.get_chat(self.chat_session)
+            #
+            #     if current_chat is None:
+            #         await self
+            #
+            #     await self.channel_layer.group_send(
+            #         self.session_token,
+            #         {
+            #             "type": "employee_joined",
+            #             "joined_user": self.scope["user"].username
+            #         }
+            #     )
+
+
+            await self.channel_layer.group_send(
+                "admin_group",
+                {
+                    "type": "new_chat_session",
+                    "session_token": self.session_token,
+                    "user_id": self.scope["user"].id if self.scope["user"].is_authenticated else None
+                }
+            )
+
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.session_token, self.channel_name)
+        await self.channel_layer.group_send(
+            "admin_group",
+            {
+                "type": "disconnected_chat_session",
+                "session_token": self.session_token
+            }
+        )
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
 
         message = text_data_json["message"]
 
-        if "sender" in text_data_json and text_data_json["sender"] == "bot":
+        if "sender" in text_data_json and (text_data_json["sender"] == "bot"):
             return
 
         chat = await self.get_chat()
-        await self.chat_sessions.store_message(chat, message)
+        user = self.scope["user"] if self.scope["user"].is_authenticated else None
+        is_guest_message = True if user is None else False
+
+        await self.chat_sessions.store_message(chat, message, is_guest_message)
+
+        if self.scope["user"].is_authenticated:
+            return
 
         await self.channel_layer.group_send(
             self.session_token,
@@ -91,6 +130,17 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 }
             )
         )
+
+    async def employee_joined(self, event):
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "sender": "bot",
+                    "message": self.settings.greeting_text
+                }
+            )
+        )
+
 
     @sync_to_async
     def match_question(self, question):
@@ -138,5 +188,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             )
         )
 
+
+
+
 #    async def instantiate_chat(self, chat_session):
-#        existing_chat = 
+#        existing_chat =
