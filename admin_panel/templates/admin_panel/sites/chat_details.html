@@ -21,13 +21,18 @@
                         {{ message.id }}
                     </td>
                     <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
                         {% if message.from_guest %}
+                            <i class="material-icons" style="font-size: 1.2rem">person</i>
                             Besucher
                         {% elif message.user.id is not None %}
+                            <i class="material-icons" style="font-size: 1.2rem">work</i>
                             {{ chat.user.username }}
                         {% else %}
+                            <i class="material-icons" style="font-size: 1.2rem">computer</i>
                             Chatbot
                         {% endif %}
+                        </div>
                     </td>
                     <td>
                         {{ message.created_at.time }}
