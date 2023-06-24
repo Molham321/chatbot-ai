@@ -69,7 +69,6 @@ function onWebSocketMessage(event) {
     sender = getSenderFromString(data.sender)
 
     if (type === 'reply') {
-        alert("reply")
         renderMessage(sender, data.message);
     } else if (type === 'loading') {
         toggleProcessing(true);
