@@ -13,8 +13,18 @@ const TYPE_BOT = 'bot';
  */
 const TYPE_USER = 'user';
 
+
+/**
+ * String which defines the employee type for message rendering.
+ * @type {string}
+ */
 const TYPE_EMPLOYEE = 'employee';
 
+
+/**
+ * String which defines the system type for message rendering.
+ * @type {string}
+ */
 const TYPE_SYSTEM = 'system';
 
 
