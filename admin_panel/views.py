@@ -462,3 +462,9 @@ def chats_view(request):
                       {})
     else:
         return redirect('admin_panel:admin_login')
+
+def chat_view(request, session_token):
+    if request.user.is_authenticated:
+        return render(request, 'admin_panel/sites/chat.html', {'session_id': session_token})
+    else:
+        return redirect('admin_panel:admin_login')

@@ -9,15 +9,22 @@ from chatbot_logic.classes.ChatSessions import ChatSessions
 @database_sync_to_async
 def get_active_sessions():
     chat_sessions = ChatSessions()
-    active_sessions = chat_sessions.get_active_sessions()
+    active_chats = chat_sessions.get_active_sessions()
 
     serialized_sessions = []
 
-    for session in active_sessions:
+    for chat in active_chats:
+
+        initial_message = ''
+        if len(chat.first_chat_message) > 0:
+            initial_message = chat.first_chat_message[0].message
+
         serialized_sessions.append({
-            'id': session.id,
-            'session_token': str(session.token),
-            'created_at': str(session.created_at)
+            'id': chat.chat_session.id,
+            'session_token': str(chat.chat_session.token),
+            'created_at': str(chat.chat_session.created_at),
+            'is_employee_present': chat.user is not None,
+            'initial_message': initial_message
         })
 
     return serialized_sessions
@@ -80,7 +87,47 @@ class AdminChatOverviewConsumer(AsyncWebsocketConsumer):
                 {
                     "event": "new_chat_session_notification",
                     "session_token": session_token,
+                    "session": {
+                        "session_token": str(new_session.token),
+                        "initial_message": event["initial_message"]
+                    },
                     "user_id": event["user_id"]
+                }
+            )
+        )
+
+    async def chat_session_ended(self, event):
+        session_token = event["session_token"]
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "event": "chat_session_ended_notification",
+                    "session_token": session_token,
+                }
+            )
+        )
+
+    async def employee_joined_chat(self, event):
+        session_token = event["session_token"]
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "event": "employee_joined_notification",
+                    "session_token": session_token,
+                }
+            )
+        )
+
+    async def employee_left_chat(self, event):
+        session_token = event["session_token"]
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "event": "employee_left_notification",
+                    "session_token": session_token,
                 }
             )
         )

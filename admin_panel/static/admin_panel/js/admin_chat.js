@@ -1,10 +1,5 @@
-/**
- * Question request url.
- * @type {string}
- */
-const SESSION_URL = "/chatbot/instantiate_session/"
-const REQUEST_URL = "/chatbot/question/"
-const WEBSOCKET_URL = "/ws/chat/"
+let webSocket;
+
 
 /**
  * String which defines the bot type for message rendering.
@@ -23,73 +18,25 @@ const TYPE_EMPLOYEE = 'employee';
 const TYPE_SYSTEM = 'system';
 
 
-/**
- * Special secret easer egg class
- * @type {string}
- */
-const EASTER_EGG_CLASS = 'hinge';
-
-/**
- * API Key used for API fetches
- * @type {string}
- */
-const API_KEY = 'Token d56f72fab5d730a9fe15952c035d38c053f9b757';
-
-/**
- * Class which represents a slight 'wobble' animation
- * @type {string}
- */
-const WOBBLE_CLASS = 'wobble';
-
-/**
- * Icon name for right arrow
- * @type {string}
- */
-const RIGHT_ARROW_ICON = 'chevron_right';
-
-/**
- * Icon name for left arrow
- * @type {string}
- */
-const LEFT_ARROW_ICON = 'chevron_left';
-
-/**
- * Error Message in Case the question fetch failes completly.
- * @type {string}
- */
-const ERROR_MESSAGE = 'Entschuldigung, es liegt zur Zeit ein technisches Problem vor. Bitte versuch es später nochmal.';
-
-
-// Fetch csrf Token from cookie.
-const csrftoken = getCookie('csrftoken');
-
-// Used for the easter egg.
-var missCounter = 0;
-
-// Used to trigger the wobble animation
-var firstQuestion = true;
-
-var isEmployeeConnected = false;
-
-// Get global selectors which are used in different scopes
 var root = document.querySelector('html');
-var progressBar = document.getElementById('progress-bar');
-var inputField = document.getElementById('input-field');
-var inputButton = document.getElementById('input-button');
-var overlay = document.querySelector('.more-information-container');
-
-let webSocket;
-
+var messageInput = document.getElementById('actual-message');
+var sendButton = document.getElementById('send-button');
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    var sendButton = document.getElementById('send-button');
-    var messageInput = document.getElementById('actual-message');
-    var toggleIcon = document.querySelector('#toggle-icon');
-    var questions = document.querySelectorAll('.question');
-    var overlayToggle = document.querySelector('#toggle-overlay');
+    const SESSION_TOKEN = document.getElementById('session-token').value
+    const WEBSOCKET_URL = `/ws/admin/chat/${SESSION_TOKEN}/`
+
+    let urlParts = window.location.href.split("/")
 
     // Attach click handler for the question submit button
-    sendButton.addEventListener('click', function () {
+    sendButton.addEventListener('click', submitMessage);
+    messageInput.addEventListener('keyup', function (event) {
+        if (event.code === 'Enter' && !event.shiftKey) {
+            submitMessage()
+        }
+    })
+
+    function submitMessage() {
         var text = messageInput.value;
 
         if (text.length) {
@@ -100,82 +47,18 @@ document.addEventListener("DOMContentLoaded", function (event) {
             messageInput.value = '';
 
             // Render the user message
-            renderMessage(TYPE_USER, text);
+            renderMessage(TYPE_EMPLOYEE, text);
 
             // Fetch question and display it
             sendRequestToSocket(text);
-        } else {
-            // Check for easter egg
-            easterEgg(sendButton);
         }
-    });
+    }
 
-    // Attach click handler for the overlay toggle button
-    overlayToggle.addEventListener('click', function () {
-        if (overlay.classList.contains('active')) {
-            // In case the overlay is open
-            overlay.classList.remove('active');
-            toggleIcon.innerHTML = LEFT_ARROW_ICON;
-        } else {
-            // In case the overlay is closed
-            overlay.classList.add('active');
-            toggleIcon.innerHTML = RIGHT_ARROW_ICON;
+    webSocket = new WebSocket("ws://" + window.location.host + WEBSOCKET_URL);
 
-            // Remove toggle effect
-            toggleWobble(false);
-        }
-    });
+    webSocket.onmessage = onWebSocketMessage;
+})
 
-    // Attach click handler for the recommended questions
-    questions.forEach(item => {
-        item.addEventListener('click', function (event) {
-
-            // Get the question value from data attribute
-            var question = event.target.getAttribute('data-question');
-
-            // Only proceed in case question is defined
-            if (question) {
-
-                // close Overlay
-                overlay.classList.remove('active');
-
-                // Set correct Icon for Toggler
-                toggleIcon.innerHTML = LEFT_ARROW_ICON;
-
-                // Render the user message
-                renderMessage(TYPE_USER, question);
-
-                // Fetch question and display it
-                sendRequestToSocket(question);
-            }
-        });
-    });
-
-    instantiateSession()
-        .then((session) => {
-            webSocket = new WebSocket("ws://" + window.location.host + WEBSOCKET_URL + session.token + "/");
-
-            webSocket.onmessage = onWebSocketMessage;
-        })
-});
-
-function instantiateSession() {
-    return new Promise((resolve) => {
-        fetch(SESSION_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': API_KEY,
-            }
-        }).then(function (response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                renderMessage(TYPE_BOT, ERROR_MESSAGE);
-            }
-        }).then(data => resolve(data))
-    })
-}
 
 function onWebSocketMessage(event) {
     const data = JSON.parse(event.data);
@@ -183,23 +66,11 @@ function onWebSocketMessage(event) {
     let sender = TYPE_USER;
     let type = data.type || 'reply';
 
-    if (data.sender === 'bot')
-        sender = TYPE_BOT;
-    else if (data.sender === 'system')
-        sender = TYPE_SYSTEM
-    else if (data.sender === 'employee')
-        sender = TYPE_EMPLOYEE
+    sender = getSenderFromString(data.sender)
 
     if (type === 'reply') {
+        alert("reply")
         renderMessage(sender, data.message);
-        toggleProcessing(false);
-
-        renderAssumedAnswers(data.answer.assumed_answers);
-
-        if (firstQuestion) {
-            toggleWobble(true);
-            firstQuestion = false;
-        }
     } else if (type === 'loading') {
         toggleProcessing(true);
     } else if (type === 'employee_joined') {
@@ -208,7 +79,32 @@ function onWebSocketMessage(event) {
     } else if (type === 'employee_disconnected') {
         isEmployeeConnected = false
         renderMessage(sender, data.message);
+    } else if (type === 'chat_history') {
+
+        let messages = data.messages;
+        for (let message of messages) {
+            let currentSender = getSenderFromString(message.sender)
+            let currentDate = new Date(Date.parse(message.created_at))
+            renderMessage(currentSender, message.message, currentDate)
+        }
+    } else if (type === 'guest_disconnected') {
+        renderMessage(sender, data.message)
+        messageInput.disabled = true;
+        sendButton.disabled = true;
     }
+}
+
+function getSenderFromString(senderString) {
+    if (senderString === 'bot')
+        return TYPE_BOT;
+    else if (senderString === 'user')
+        return TYPE_USER
+    else if (senderString === 'system')
+        return TYPE_SYSTEM
+    else if (senderString === 'employee')
+        return TYPE_EMPLOYEE
+
+    return ''
 }
 
 /**
@@ -216,19 +112,23 @@ function onWebSocketMessage(event) {
  * @param type
  * @param text
  */
-function renderMessage(type, text) {
+function renderMessage(type, text, createdAt = new Date()) {
     var html = '';
     var history = document.getElementById('chat-history');
 
     if (type === TYPE_USER) {
-        html = '<div class="container bot row">\n' +
-            '    <div class="container-image user col s2 push-s10">\n' +
+
+        html = '<div class="container row">\n' +
+            '\n' +
+            '    <div class="container-image col s2">\n' +
             '        <img class="avatar-image" src="data:image/svg+xml,%3Csvg height=\'512pt\' viewBox=\'0 0 512 512.00019\' width=\'512pt\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'m256 511.996094c-141.484375 0-256-114.65625-256-255.996094 0-141.488281 114.496094-256 256-256 141.488281 0 255.996094 114.496094 255.996094 256 0 141.476562-114.667969 255.996094-255.996094 255.996094zm0 0\' fill=\'%2366a9df\'/%3E%3Cpath d=\'m25%0A6 0v511.996094c141.328125 0 255.996094-114.519532 255.996094-255.996094 0-141.5-114.507813-256-255.996094-256zm0 0\' fill=\'%234f84cf\'/%3E%3Cpath d=\'m256 316c-74.488281 0-145.511719 32.5625-197.417969 102.96875 103.363281 124.941406 294.6875 123.875 396.65625-2.230469-25.179687-25.046875-81.894531-100.738281-199.238281-100.738281zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m455.238281 416.738281c-48.140625 59.527344-120.371093 95.257813-199.238281 95.257813v-195.996094c117.347656 0 174.058594 75.699219 199.238281 100.738281zm0 0\' fill=\'%23bdecfc\'/%3E%3Cpath d=\'m256 271c-49.628906 0-90-40.375-90-90v-30c0-49.625 40.371094-90 90-90 49.625 0 90 40.375 90 90v30c0 49.625-40.375 90-90 90zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m256 61v210c49.628906 0 90-40.371094 90-90v-30c0-49.628906-40.371094-90-90-90zm0 0\' fill=\'%23bdecfc\'/%3E%3C/svg%3E" alt="Avatar">\n' +
             '    </div>\n' +
-            '    <div class="container-text user col s10 pull-s2 z-depth-1">\n' +
+            '\n' +
+            '    <div class="container-text col s10 z-depth-1">\n' +
             '        <p>' + text + '</p>\n' +
-            '        <span class="time-right">' + getCurrentTime() + '</span>\n' +
+            '        <span class="time-right">' + getCurrentTimeFromDate(createdAt) + '</span>\n' +
             '    </div>\n' +
+            '\n' +
             '</div>'
     } else if (type === TYPE_BOT) {
         html = '<div class="container row">\n' +
@@ -239,27 +139,23 @@ function renderMessage(type, text) {
             '\n' +
             '    <div class="container-text col s10 z-depth-1">\n' +
             '        <p>' + text + '</p>\n' +
-            '        <span class="time-right">' + getCurrentTime() + '</span>\n' +
+            '        <span class="time-right">' + getCurrentTimeFromDate(createdAt) + '</span>\n' +
             '    </div>\n' +
             '\n' +
             '</div>'
     } else if (type === TYPE_EMPLOYEE) {
-        html = '<div class="container row">\n' +
-            '\n' +
-            '    <div class="container-image col s2">\n' +
+        html = '<div class="container bot row">\n' +
+            '    <div class="container-image user col s2 push-s10">\n' +
             '        <img class="avatar-image" src="data:image/svg+xml,%3Csvg height=\'512pt\' viewBox=\'0 0 512 512.00019\' width=\'512pt\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'m256 511.996094c-141.484375 0-256-114.65625-256-255.996094 0-141.488281 114.496094-256 256-256 141.488281 0 255.996094 114.496094 255.996094 256 0 141.476562-114.667969 255.996094-255.996094 255.996094zm0 0\' fill=\'%2366a9df\'/%3E%3Cpath d=\'m25%0A6 0v511.996094c141.328125 0 255.996094-114.519532 255.996094-255.996094 0-141.5-114.507813-256-255.996094-256zm0 0\' fill=\'%234f84cf\'/%3E%3Cpath d=\'m256 316c-74.488281 0-145.511719 32.5625-197.417969 102.96875 103.363281 124.941406 294.6875 123.875 396.65625-2.230469-25.179687-25.046875-81.894531-100.738281-199.238281-100.738281zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m455.238281 416.738281c-48.140625 59.527344-120.371093 95.257813-199.238281 95.257813v-195.996094c117.347656 0 174.058594 75.699219 199.238281 100.738281zm0 0\' fill=\'%23bdecfc\'/%3E%3Cpath d=\'m256 271c-49.628906 0-90-40.375-90-90v-30c0-49.625 40.371094-90 90-90 49.625 0 90 40.375 90 90v30c0 49.625-40.375 90-90 90zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m256 61v210c49.628906 0 90-40.371094 90-90v-30c0-49.628906-40.371094-90-90-90zm0 0\' fill=\'%23bdecfc\'/%3E%3C/svg%3E" alt="Avatar">\n' +
             '    </div>\n' +
-            '\n' +
-            '    <div class="container-text col s10 z-depth-1">\n' +
+            '    <div class="container-text user col s10 pull-s2 z-depth-1">\n' +
             '        <p>' + text + '</p>\n' +
-            '        <span class="time-right">' + getCurrentTime() + '</span>\n' +
+            '        <span class="time-right">' + getCurrentTimeFromDate(createdAt) + '</span>\n' +
             '    </div>\n' +
-            '\n' +
             '</div>'
     } else if (type === TYPE_SYSTEM) {
         html = '<div style="text-align: center;">' + text + '</div>';
     }
-
 
     // Append node to chatbot hsitory
     var node = document.createElement('div');
@@ -271,6 +167,13 @@ function renderMessage(type, text) {
 }
 
 /**
+ * Scrolls the chatbot history to the bottom.
+ */
+function scrollBottom() {
+    root.scrollTop = root.scrollHeight;
+}
+
+/**
  * Sends the ser question to the chatbot API and processes its response
  * @param _text
  */
@@ -279,7 +182,7 @@ function sendRequestToSocket(_text) {
     // Prepare POST body data
     let body = {
         'message': _text,
-        'sender': 'user'
+        'sender': 'employee'
     };
 
     if (!isEmployeeConnected) {
@@ -290,12 +193,12 @@ function sendRequestToSocket(_text) {
     webSocket.send(JSON.stringify(body));
 }
 
+
 /**
  * Returns the current Time in format HH:mm
  * @returns {string}
  */
-function getCurrentTime() {
-    var time = new Date();
+function getCurrentTimeFromDate(time) {
 
     var hours = time.getHours().toString();
     var minutes = time.getMinutes().toString();
@@ -309,93 +212,4 @@ function getCurrentTime() {
     }
 
     return hours + ':' + minutes;
-}
-
-/**
- * Returns the value of a cookie specified by the name param.
- * @param name
- * @returns {null}
- */
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-/**
- * Checks if requirements for the easter egg are fulfilled and toggles the easter egg animation.
- * @param sendButton
- */
-function easterEgg(sendButton) {
-    missCounter++;
-    if (missCounter > 4) {
-        sendButton.classList.add(EASTER_EGG_CLASS);
-    }
-}
-
-/**
- * Shows the recommended questions.
- */
-function showQuestions() {
-    var questions = document.querySelectorAll('.question');
-    questions.forEach(item => item.style.display = 'block');
-}
-
-/**
- * Scrolls the chatbot history to the bottom.
- */
-function scrollBottom() {
-    root.scrollTop = root.scrollHeight;
-}
-
-/**
- * Renders the assumed answers in the side menu.
- * @param assumedAnswers
- */
-function renderAssumedAnswers(assumedAnswers) {
-    var questionContainers = document.querySelectorAll('.question>span');
-    for (var i = 0; i < questionContainers.length; i++) {
-        questionContainers[i].innerHTML = assumedAnswers[i].question_text;
-        questionContainers[i].setAttribute('data-question', assumedAnswers[i].question_text);
-        questionContainers[i].parentElement.setAttribute('data-question', assumedAnswers[i].question_text);
-    }
-    showQuestions();
-}
-
-/**
- * Toggles the Prelaoding animation, true=on, false=off
- * @param on
- */
-function toggleProcessing(on) {
-    if (on) {
-        inputField.style.display = 'none';
-        inputButton.style.display = 'none';
-        progressBar.style.display = 'block';
-    } else {
-        progressBar.style.display = 'none';
-        inputField.style.display = 'block';
-        inputButton.style.display = 'block';
-    }
-}
-
-/**
- * Toggles the Wobble animation, true=on, false=off
- * @param on
- */
-function toggleWobble(on) {
-    if (on) {
-        overlay.classList.add(WOBBLE_CLASS);
-    } else {
-        overlay.classList.remove(WOBBLE_CLASS)
-    }
 }

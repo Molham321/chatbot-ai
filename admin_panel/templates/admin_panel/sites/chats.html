@@ -8,35 +8,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        const WEBSOCKET_URL = "/ws/admin/chats/"
-        const sessionList = document.getElementById("session-list");
-
-        const socket = new WebSocket("ws://" + window.location.host + WEBSOCKET_URL);
-
-        socket.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-
-            if (data.event === "active_sessions") {
-                updateSessionList(data.sessions);
-            }
-
-            if (data.event === "new_chat_session_notification") {
-                alert(data.user_id);
-                updateSessionList(data.session_token);
-            }
-        };
-
-        function updateSessionList(sessions) {
-            sessionList.innerHTML = "";
-
-            for (let i = 0; i < sessions.length; i++) {
-                const session = sessions[i].created_at;
-
-                const sessionItem = document.createElement("div");
-                sessionItem.innerText = session;
-                sessionList.appendChild(sessionItem);
-            }
-        }
-    </script>
+        <script src="{% static 'admin_panel/js/chat_session_overview.js' %}"></script>
 {% endblock %}
