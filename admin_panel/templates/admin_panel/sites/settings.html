@@ -4,7 +4,7 @@
 {% block content %}
 
     <ul class="collapsible settings">
-       {% comment %} <li class="active">
+        {% comment %} <li class="active">
             <div class="collapsible-header"><i class="accent-color material-icons">perm_identity</i>Erscheinung & Identität</div>
             <div class="collapsible-body">
 
@@ -17,16 +17,37 @@
                     <form class="col s9">
                         <div class="row">
                             <div class="input-field col s12">
-                                <textarea name="greeting" id="greeting" class="materialize-textarea"
-                                          data-length="255">{{ settings.greeting_text }}</textarea>
+                        <textarea name="greeting" id="greeting" class="materialize-textarea"
+                                  data-length="255">{{ settings.greeting_text }}</textarea>
                                 <label for="greeting">Begrüßung</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <textarea name="no-answer" id="no-answer" class="materialize-textarea"
-                                          data-length="255">{{ settings.noanswer_text }}</textarea>
+                        <textarea name="no-answer" id="no-answer" class="materialize-textarea"
+                                  data-length="255">{{ settings.noanswer_text }}</textarea>
                                 <label for="no-answer">Keine Antwort gefunden</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="employee-joined" id="employee-joined" class="materialize-textarea"
+                                  data-length="255">{{ settings.employee_joined_text }}</textarea>
+                                <label for="employee-joined">Mitarbeiter ist beigetreten</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="employee-left" id="employee-left" class="materialize-textarea"
+                                  data-length="255">{{ settings.employee_left_text }}</textarea>
+                                <label for="employee-left">Mitarbeiter hat verlassen</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="user-left" id="user-left" class="materialize-textarea"
+                                  data-length="255">{{ settings.user_left_text }}</textarea>
+                                <label for="user-left">Benutzer hat verlassen</label>
                             </div>
                         </div>
                     </form>
@@ -34,19 +55,22 @@
             </div>
         </li>
         <li>
-            <div class="collapsible-header"><i class="accent-color material-icons">settings_applications</i>Matching</div>
+            <div class="collapsible-header"><i class="accent-color material-icons">settings_applications</i>Matching
+            </div>
             <div class="collapsible-body">
                 <div class="row">
                     <form class="col s9">
                         <div class="row">
                             <div class="input-field col s2">
-                                <input type="number" name="similarity" id="similarity" class="validate" value="{{ settings.similarity_factor|stringformat:".2f" }}">
+                                <input type="number" name="similarity" id="similarity" class="validate"
+                                       value="{{ settings.similarity_factor|stringformat:".2f" }}">
                                 <label for="similarity">Similarity Faktor</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s2">
-                                <input type="number" name="context" id="context" class="validate" value="{{ settings.context_factor|stringformat:".2f" }}">
+                                <input type="number" name="context" id="context" class="validate"
+                                       value="{{ settings.context_factor|stringformat:".2f" }}">
                                 <label for="context">Context Faktor</label>
                             </div>
                         </div>
@@ -54,13 +78,15 @@
                             <span>Matching Algorithmus:</span>
                             <p class="matching-radio">
                                 <label>
-                                    <input name="matching-method" type="radio" value="cosine" {% if settings.matching_method == 'cosine' %}checked{% endif %} />
+                                    <input name="matching-method" type="radio" value="cosine"
+                                           {% if settings.matching_method == 'cosine' %}checked{% endif %}/>
                                     <span>Cosine Matching</span>
                                 </label>
                             </p>
                             <p class="matching-radio">
                                 <label>
-                                    <input name="matching-method" type="radio" value="spacy" {% if settings.matching_method == 'spacy' %}checked{% endif %} />
+                                    <input name="matching-method" type="radio" value="spacy"
+                                           {% if settings.matching_method == 'spacy' %}checked{% endif %}/>
                                     <span>Spacey Matching</span>
                                 </label>
                             </p>
@@ -78,20 +104,27 @@
                     <form class="col s9">
                         <div class="row">
                             <div class="input-field col s8">
-                                <input type="number" name="mail-timeout" id="mail-timeout" class="validate" value="{{ settings.mail_timeout_in_seconds }}">
-                                <label for="mail-timeout" class="input-field-label">Timeout für Mail-Versand-Vorschlag</label>
+                                <input type="number" name="mail-timeout" id="mail-timeout" class="validate"
+                                       value="{{ settings.mail_timeout_in_seconds }}">
+                                <label for="mail-timeout" class="input-field-label">Timeout für
+                                    Mail-Versand-Vorschlag</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s8">
-                                <input type="number" name="similarity-threshold" id="similarity-threshold" class="validate" step="0.1" value="{{ settings.similarity_mail_threshold|stringformat:".2f" }}">
-                                <label for="similarity-threshold" class="input-field-label">Qualitätsschwellwert für Chatbot Antworten</label>
+                                <input type="number" name="similarity-threshold" id="similarity-threshold"
+                                       class="validate" step="0.1"
+                                       value="{{ settings.similarity_mail_threshold|stringformat:".2f" }}">
+                                <label for="similarity-threshold" class="input-field-label">Qualitätsschwellwert für
+                                    Chatbot Antworten</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s8">
-                                <input type="number" name="quality-test-answers" id="quality-test-answers" class="validate" value="{{ settings.number_of_quality_test_answers }}">
-                                <label for="quality-test-answers" class="input-field-label">Anzahl der zu prüfenden Chatbot Antworten</label>
+                                <input type="number" name="quality-test-answers" id="quality-test-answers"
+                                       class="validate" value="{{ settings.number_of_quality_test_answers }}">
+                                <label for="quality-test-answers" class="input-field-label">Anzahl der zu prüfenden
+                                    Chatbot Antworten</label>
                             </div>
                         </div>
                     </form>

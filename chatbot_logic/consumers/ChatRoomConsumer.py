@@ -22,7 +22,10 @@ def get_settings():
             context_factor=1.0,
             matching_method='cosine',
             greeting_text='',
-            noanswer_text=''
+            noanswer_text='',
+            employee_joined_text='',
+            employee_left_text='',
+            user_left_text='',
         )
         return settings
 
@@ -247,8 +250,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "employee_joined",
                     "sender": "system",
-                    # TODO: Add to configurations in admin panel
-                    "message": "Ein Mitarbeiter ist der Unterhaltung beigetreten."
+                    "message": self.settings.employee_joined_text
                 }
             )
         )
@@ -262,8 +264,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "employee_disconnected",
                     "sender": "system",
-                    # TODO: Add to configurations in admin panel
-                    "message": "Der Mitarbeiter hat die Unterhaltung verlassen."
+                    "message": self.settings.employee_left_text
                 }
             )
         )
@@ -274,7 +275,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "guest_disconnected",
                     "sender": "system",
-                    "message": "Der Nutzer hat die Unterhaltung verlassen."
+                    "message": self.settings.user_left_text
                 }
             )
         )
