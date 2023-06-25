@@ -18,7 +18,8 @@ websocket_urlpatterns = [
         ChatRoomConsumer.as_asgi()
     ),
     re_path("ws/admin/chats/", AdminChatOverviewConsumer.as_asgi()),
-    re_path(r"ws/admin/chat/(?P<session>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/$", ChatRoomConsumer.as_asgi()),
+    re_path(r"ws/admin/chat/(?P<session>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/$",
+            ChatRoomConsumer.as_asgi()),
     path("ws/test/", ChatRoomConsumer.as_asgi())
 ]
 

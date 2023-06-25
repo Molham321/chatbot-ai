@@ -33,22 +33,24 @@ def get_settings():
 class ChatRoomConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
-        print("Tehest")
         self.match_controller = None
         self.chat_sessions = None
         self.settings = None
         self.session_token = None
         self.chat_session = None
         self.chat = None
+        self.user = None
+        self.is_private = False
 
     async def connect(self):
         self.session_token = self.scope["url_route"]["kwargs"]["session"]
 
+        if self.scope["path"].startswith('/ws/admin/chat/'):
+            self.is_private = True
+
         self.chat_sessions = ChatSessions()
 
         chat_session = await self.retrieve_session(self.session_token)
-
-        print(chat_session)
 
         if chat_session is None:
             await self.close()
@@ -62,12 +64,15 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
             await self.accept()
 
-            if self.scope["user"].is_authenticated:
+            if self.scope["user"].is_authenticated and self.is_private:
+                self.user = self.scope["user"]
+
+            if self.user is not None:
                 await self.channel_layer.group_send(
                     self.session_token,
                     {
                         "type": "employee_joined_message",
-                        "user": self.scope["user"]
+                        "user": self.user
                     }
                 )
 
@@ -80,17 +85,17 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 )
 
                 chat = await self.get_chat()
-                chat.user = self.scope["user"]
+                chat.user = self.user
                 await self.chat_sessions.store_chat(chat)
 
                 await self.send_previous_chat()
 
-            if not self.scope["user"].is_authenticated:
+            if self.user is None:
                 await self.send_greeting_message()
 
     async def disconnect(self, code):
 
-        has_guest_left = not self.scope["user"].is_authenticated
+        has_guest_left = self.user is None
 
         if has_guest_left:
             await self.chat_sessions.set_chatsession_inactive(self.chat_session)
@@ -147,7 +152,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             is_new_chat = True
 
         chat = await self.get_chat()
-        user = self.scope["user"] if self.scope["user"].is_authenticated else None
+        user = self.user
         is_guest_message = True if user is None else False
 
         await self.chat_sessions.store_message(chat, message, is_guest_message, user)
@@ -159,7 +164,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                     "type": "new_chat_session",
                     "session_token": self.session_token,
                     "initial_message": message,
-                    "user_id": self.scope["user"].id if self.scope["user"].is_authenticated else None
+                    "user_id": self.user.id if self.user is not None else None
                 }
             )
 
@@ -168,7 +173,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             {
                 "type": "forward_message",
                 "message": message,
-                "sender": "employee" if self.scope["user"].is_authenticated else "user",
+                "sender": "employee" if self.user is not None else "user",
                 "sender_channel_name": self.channel_name
             }
         )
@@ -216,7 +221,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         for message in chat_messages:
 
             sender = ''
-            if message.from_guest == True:
+            if message.from_guest:
                 sender = 'user'
             elif message.user is None:
                 sender = 'bot'
