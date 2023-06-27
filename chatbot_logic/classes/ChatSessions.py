@@ -55,7 +55,7 @@ class ChatSessions(metaclass=Singleton):
     @database_sync_to_async
     def instantiate_chat(self, session):
         try:
-            existing_chat = Chat.objects.get(chat_session=session.id)
+            existing_chat = Chat.objects.select_related('user').get(chat_session=session.id)
             return existing_chat
         except Chat.DoesNotExist:
             chat = Chat()

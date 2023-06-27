@@ -68,6 +68,12 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 self.user = self.scope["user"]
 
             if self.user is not None:
+
+                self.chat = await self.get_chat()
+                if self.chat.user is not None:
+                    await self.close()
+                    return
+
                 await self.channel_layer.group_send(
                     self.session_token,
                     {
