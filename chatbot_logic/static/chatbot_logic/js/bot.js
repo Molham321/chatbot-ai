@@ -86,6 +86,7 @@ var root = document.querySelector('html');
 var progressBar = document.getElementById('progress-bar');
 var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
+var questionsContainer = document.querySelector('.questions-container');
 var overlay = document.querySelector('.more-information-container');
 
 let webSocket;
@@ -103,29 +104,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var text = messageInput.value;
 
     if (text.length) {
-      // Reset miss counter (easter egg)
-      missCounter = 0;
+        // Reset miss counter (easter egg)
+        missCounter = 0;
 
-      // Empty Input value
-      messageInput.value = '';
+        // Empty Input value
+        messageInput.value = '';
 
-      // Render the user message
-      renderMessage(TYPE_USER, text);
+        // Render the user message
+        renderMessage(TYPE_USER, text);
 
-            // Fetch question and display it
-            sendRequestToSocket(text);
-        } else {
-            // Check for easter egg
-            easterEgg(sendButton);
-        }
-    });
+        // Fetch question and display it
+        sendRequestToSocket(text);
+    }
   }
-
-  sendButton.addEventListener('click', submitHandler);
 
   // Attach keypress handler for the enter key
   messageInput.addEventListener('keypress', function (event) {
-    if (event.key === "Enter") { // 13 is the keycode for enter key
+    if (event.key === "Enter" && messageInput.value.trim() !== '') {
       submitHandler();
     }
   });
@@ -400,11 +395,13 @@ function toggleProcessing(on) {
   if (on) {
     inputField.style.display = 'none';
     inputButton.style.display = 'none';
+    questionsContainer.style.display = 'none';
     progressBar.style.display = 'block';
   } else {
     progressBar.style.display = 'none';
     inputField.style.display = 'block';
     inputButton.style.display = 'block';
+    questionsContainer.style.display = 'flex';
   }
 }
 

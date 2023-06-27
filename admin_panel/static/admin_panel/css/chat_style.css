@@ -4,8 +4,8 @@ body {
 }
 
 .flex {
-  display: flex !important;
-  flex-wrap: wrap !important;
+    display: flex !important;
+    align-items: center;
 }
 
 .container {
@@ -21,6 +21,12 @@ body {
     animation-duration: 1.5s;
 }
 
+.wobble {
+    animation: headShake ease-in-out;
+    animation-duration: 1s;
+    animation-iteration-count:infinite;
+}
+
 .hinge {
     animation: hinge;
     animation-duration: 2s;
@@ -28,11 +34,6 @@ body {
 
 .row.no-margin {
     margin-bottom: 0 !important;
-}
-
-
-.fhe-send-color {
-    background-color: rgba(51, 77, 102, 0.9) !important;
 }
 
 /* Darker chat container */
@@ -54,10 +55,7 @@ body {
 /* Style images */
 
 .avatar-image {
-    float: left;
     max-width: 60px;
-    width: 100%;
-    border-radius: 50%;
 }
 
 
@@ -74,7 +72,7 @@ body {
 .time-right {
     float: right;
     font-size: 10pt;
-    color: #FFFFFF !important;
+    color: black !important;
     padding: 0 10px 10px 0;
 }
 
@@ -125,8 +123,8 @@ body {
 
 .container-text {
     border-radius: 5px 15px 15px 15px;
-    color: white;
-    background-color: rgba(51, 77, 102, 0.9);
+    color: black;
+    background-color: #fff;
     padding: 10px;
 }
 
@@ -138,8 +136,12 @@ body {
 
 .container-text.user {
     border-radius: 15px 5px 15px 15px;
-    background-color: rgba(204, 0, 82, 0.9);
+    background-color: #fff;
     padding: 10px;
+}
+
+.fhe-color {
+    background-color: rgba(51, 77, 102, 0.9) !important;
 }
 
 /* textarea label focus color */
@@ -193,19 +195,27 @@ body {
 }
 
 .questions-container {
-    padding: 7%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .question {
-    background-color: rgba(204, 0, 82, 1);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 10px;
+    background-color: #FCFFFB;
+    margin: 5px;
     border-radius: 5px;
+    width: 200px;
+    height: 50px;
+    flex: 1;
+    text-align: center;
+}
+
+.faq-text {
+    color: black;
 }
 
 .questions-header {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .cursor {

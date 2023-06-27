@@ -15,8 +15,8 @@ function ToggleChatbot() {
     // Erstellen des iframe-Elements, wenn es noch nicht existiert
     iframe = document.createElement('iframe');
     iframe.src = "http://127.0.0.1:8080/chatbot/";
-    iframe.width = "350px";
-    iframe.height = "500px";
+    iframe.width = "100%";
+    iframe.height = "90%";
     iframe.style.border = "1px solid lightgray";
     iframe.name = "Test";
 
