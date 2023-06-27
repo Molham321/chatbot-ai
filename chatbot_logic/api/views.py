@@ -11,8 +11,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 
 from admin_panel.models import AdminSettings
-from chatbot_logic.api.serializers import AnswerSetSerializer
+from chatbot_logic.api.serializers import AnswerSetSerializer, ChatSessionSerializer
 from chatbot_logic.controllers.MatchController import MatchController
+
+from chatbot_logic.classes.ChatSessions import ChatSessions
 
 
 class ChatbotHTML(APIView):
@@ -88,3 +90,15 @@ def api_render_message(request):
         return view.get(request)
     else:
         return Response('Error ' + str(status.HTTP_400_BAD_REQUEST))
+
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def api_instantiate_session(request):
+    chat_sessions = ChatSessions()
+    chat_session = chat_sessions.instantiate_session()
+
+    serializer = ChatSessionSerializer(chat_session)
+
+    return Response(serializer.data)

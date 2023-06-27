@@ -1,0 +1,12 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+    <div id="session-list">
+        Sitzungen werden geladen...
+    </div>
+{% endblock %}
+
+{% block scripts %}
+        <script src="{% static 'admin_panel/js/chat_session_overview.js' %}"></script>
+{% endblock %}

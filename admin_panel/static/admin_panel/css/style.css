@@ -20,12 +20,10 @@ html, body {
 /* Root Page */
 
 .index-card-image {
-    max-height: 300px;
-    margin-top: 5px;
-}
-
-.card .card-content p {
-    text-align: justify;
+    max-height: 200px;
+    margin: 1rem 0 2rem;
+    object-fit: contain;
+    object-position: center;
 }
 
 .fhe-color {

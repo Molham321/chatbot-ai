@@ -1,9 +1,11 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 
-class Answer (models.Model):
+class Answer(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     modified_at = models.DateTimeField(auto_now=True, blank=True)
     answer_text = models.CharField(max_length=600)
@@ -21,7 +23,8 @@ class Answer (models.Model):
     class Meta:
         ordering = ['answer_text']
 
-class Context (models.Model):
+
+class Context(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     modified_at = models.DateTimeField(auto_now=True, blank=True)
     context_text = models.CharField(max_length=80)
@@ -38,7 +41,8 @@ class Context (models.Model):
     class Meta:
         ordering = ['context_text']
 
-class Question (models.Model):
+
+class Question(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     modified_at = models.DateTimeField(auto_now=True, blank=True)
     answer = models.ForeignKey(Answer, null=True, on_delete=models.SET_NULL)
@@ -59,7 +63,8 @@ class Question (models.Model):
     class Meta:
         ordering = ['question_text']
 
-class Keyword (models.Model):
+
+class Keyword(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     modified_at = models.DateTimeField(auto_now=True, blank=True)
     question = models.ManyToManyField(Question)
@@ -77,7 +82,8 @@ class Keyword (models.Model):
     class Meta:
         ordering = ['keyword_text']
 
-class Settings (models.Model):
+
+class Settings(models.Model):
     MATCHING_METHODS = [
         ('cosine', 'Cosine Matching'),
         ('spacy', 'Spacy Matching'),
@@ -99,3 +105,68 @@ class Settings (models.Model):
 
     class Meta:
         verbose_name_plural = "Settings"
+
+
+class ChatSession(models.Model):
+    token = models.UUIDField()
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "Chat Session"
+
+    class Meta:
+        verbose_name_plural = "Chat Sessions"
+
+
+class Chat(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    modified_at = models.DateTimeField(auto_now=True, blank=True)
+    chat_session = models.ForeignKey(ChatSession, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        """
+        Save a Chat
+        """
+        super(Chat, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Chat"
+
+    class Meta:
+        verbose_name_plural = "Chats"
+
+
+class EmailSupport(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    chat_session = models.ForeignKey(ChatSession, null=True, on_delete=models.CASCADE)
+    email = models.EmailField()
+
+    def save(self, *args, **kwargs):
+        """
+        Save a Email support
+        """
+        super(EmailSupport, self).save(*args, **kwargs)
+
+
+class ChatMessage(models.Model):
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    modifier_at = models.DateTimeField(auto_now=True, blank=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    message = models.CharField(max_length=600)
+    from_guest = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        """
+        Save a Chat message
+        """
+        super(ChatMessage, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Chat Message"
+
+    class Meta:
+        verbose_name_plural = "Chat Messages"

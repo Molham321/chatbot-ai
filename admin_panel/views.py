@@ -151,6 +151,10 @@ def save_settings_view(request):
                 settings.similarity_factor = data["similarity_factor"]
                 settings.context_factor = data["context_factor"]
                 settings.matching_method = data["matching_method"]
+                settings.mail_timeout_in_seconds = data["mail_timeout"]
+                settings.similarity_mail_threshold = data["similarity_threshold"]
+                settings.number_of_quality_test_answers = data["quality_test_answers"]
+
                 settings.save()
                 return_data['toast_html'] = 'Einstellungen gespeichert'
             else:
@@ -443,5 +447,24 @@ def log_download_view(request):
 
         pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), response)
         return HttpResponse(response.getvalue(), content_type='application/pdf')
+    else:
+        return redirect('admin_panel:admin_login')
+
+
+def chats_view(request):
+    """
+    Renders the Chat Overview template and returns it as HttpResponse.
+    :param request: Passed django request object.
+    :return: Returns an HttpResponse.
+    """
+    if request.user.is_authenticated:
+        return render(request, 'admin_panel/sites/chats.html',
+                      {})
+    else:
+        return redirect('admin_panel:admin_login')
+
+def chat_view(request, session_token):
+    if request.user.is_authenticated:
+        return render(request, 'admin_panel/sites/chat.html', {'session_id': session_token})
     else:
         return redirect('admin_panel:admin_login')
