@@ -215,3 +215,22 @@ p.matching-radio > label {
 .toggle-button.active:hover, .toggle-button.active:focus {
    background-color: mediumseagreen !important;
 }
+
+.chats-row {
+    display: flex;
+    gap: 2rem;
+}
+
+.chats-row h2 {
+    font-size: 1.5rem;
+    margin-bottom: 50px;
+    font-weight: 600;
+}
+
+.chats-row .live-chats {
+    flex: 1;
+}
+
+.chats-row .old-chats {
+    flex: 2;
+}
