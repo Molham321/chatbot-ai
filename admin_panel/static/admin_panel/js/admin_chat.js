@@ -127,7 +127,7 @@ function renderMessage(type, text, createdAt = new Date()) {
 
     if (type === TYPE_USER) {
 
-        html = '<div class="container row" style="margin:1px 1px 1px -6px;">\n' +
+        html = '<div class="container row user chatContainer" style="margin:1px 1px 1px -6px;">\n' +
             '\n' +
             '    <div class="container-image col s2">\n' +
             '        <img class="avatar-image" src="data:image/svg+xml,%3Csvg height=\'512pt\' viewBox=\'0 0 512 512.00019\' width=\'512pt\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'m256 511.996094c-141.484375 0-256-114.65625-256-255.996094 0-141.488281 114.496094-256 256-256 141.488281 0 255.996094 114.496094 255.996094 256 0 141.476562-114.667969 255.996094-255.996094 255.996094zm0 0\' fill=\'%2366a9df\'/%3E%3Cpath d=\'m25%0A6 0v511.996094c141.328125 0 255.996094-114.519532 255.996094-255.996094 0-141.5-114.507813-256-255.996094-256zm0 0\' fill=\'%234f84cf\'/%3E%3Cpath d=\'m256 316c-74.488281 0-145.511719 32.5625-197.417969 102.96875 103.363281 124.941406 294.6875 123.875 396.65625-2.230469-25.179687-25.046875-81.894531-100.738281-199.238281-100.738281zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m455.238281 416.738281c-48.140625 59.527344-120.371093 95.257813-199.238281 95.257813v-195.996094c117.347656 0 174.058594 75.699219 199.238281 100.738281zm0 0\' fill=\'%23bdecfc\'/%3E%3Cpath d=\'m256 271c-49.628906 0-90-40.375-90-90v-30c0-49.625 40.371094-90 90-90 49.625 0 90 40.375 90 90v30c0 49.625-40.375 90-90 90zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m256 61v210c49.628906 0 90-40.371094 90-90v-30c0-49.628906-40.371094-90-90-90zm0 0\' fill=\'%23bdecfc\'/%3E%3C/svg%3E" alt="Avatar">\n' +
@@ -140,7 +140,7 @@ function renderMessage(type, text, createdAt = new Date()) {
             '\n' +
             '</div>'
     } else if (type === TYPE_BOT) {
-        html = '<div class="container row" style="margin: 0 0 0 385px">\n' +
+        html = '<div class="container row bot">\n' +
             '    <div class="container-text col s10 z-depth-1">\n' +
             '        <p>' + text + '</p>\n' +
             '        <span class="time-right">' + getCurrentTimeFromDate(createdAt) + '</span>\n' +
@@ -153,7 +153,7 @@ function renderMessage(type, text, createdAt = new Date()) {
             '\n' +
             '</div>'
     } else if (type === TYPE_EMPLOYEE) {
-        html = '<div class="container bot row" style="margin: 0 -130px 0 280px;">\n' +
+        html = '<div class="container bot row employee">\n' +
             '    <div class="container-image user col s2 push-s10">\n' +
             '        <img class="avatar-image" src="data:image/svg+xml,%3Csvg height=\'512pt\' viewBox=\'0 0 512 512.00019\' width=\'512pt\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'m256 511.996094c-141.484375 0-256-114.65625-256-255.996094 0-141.488281 114.496094-256 256-256 141.488281 0 255.996094 114.496094 255.996094 256 0 141.476562-114.667969 255.996094-255.996094 255.996094zm0 0\' fill=\'%2366a9df\'/%3E%3Cpath d=\'m25%0A6 0v511.996094c141.328125 0 255.996094-114.519532 255.996094-255.996094 0-141.5-114.507813-256-255.996094-256zm0 0\' fill=\'%234f84cf\'/%3E%3Cpath d=\'m256 316c-74.488281 0-145.511719 32.5625-197.417969 102.96875 103.363281 124.941406 294.6875 123.875 396.65625-2.230469-25.179687-25.046875-81.894531-100.738281-199.238281-100.738281zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m455.238281 416.738281c-48.140625 59.527344-120.371093 95.257813-199.238281 95.257813v-195.996094c117.347656 0 174.058594 75.699219 199.238281 100.738281zm0 0\' fill=\'%23bdecfc\'/%3E%3Cpath d=\'m256 271c-49.628906 0-90-40.375-90-90v-30c0-49.625 40.371094-90 90-90 49.625 0 90 40.375 90 90v30c0 49.625-40.375 90-90 90zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m256 61v210c49.628906 0 90-40.371094 90-90v-30c0-49.628906-40.371094-90-90-90zm0 0\' fill=\'%23bdecfc\'/%3E%3C/svg%3E" alt="Avatar">\n' +
             '    </div>\n' +

@@ -19,6 +19,18 @@ body {
     align-items: center;
 }
 
+.container.bot.row.employee {
+    margin: 0 -130px 0 280px;
+}
+
+.container.row.bot {
+    margin: 0 0 0 385px;
+}
+
+container.row.user.chatContainer {
+    margin: 0 0 0 -6px;
+}
+
 .container.bot {
     animation: slideInRight;
     animation-duration: 1.5s;

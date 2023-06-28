@@ -205,6 +205,14 @@ body {
     width 75%
 }
 
+.container.bot.row {
+    margin: 0 0 0 400px;
+}
+
+.container.row {
+    margin: 0 0 0 70px;
+}
+
 .question {
     background-color: #FCFFFB;
     margin: 5px;
@@ -213,6 +221,10 @@ body {
     height: 50px;
     flex: 1;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 }
 
 .faq-text {
