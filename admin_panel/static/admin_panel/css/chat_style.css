@@ -6,7 +6,7 @@ body {
 .flex {
     display: flex !important;
     align-items: center;
-    margin: 0 -85px 0 22px;
+    margin: 0 130px 0 -150px;
 }
 
 .container {
