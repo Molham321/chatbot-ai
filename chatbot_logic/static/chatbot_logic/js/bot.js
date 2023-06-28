@@ -87,7 +87,6 @@ var progressBar = document.getElementById('progress-bar');
 var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
 var questionsContainer = document.querySelector('.questions-container');
-var overlay = document.querySelector('.more-information-container');
 
 let webSocket;
 
@@ -95,9 +94,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   var sendButton = document.getElementById('send-button');
   var messageInput = document.getElementById('actual-message');
-  var toggleIcon = document.querySelector('#toggle-icon');
   var questions = document.querySelectorAll('.question');
-  var overlayToggle = document.querySelector('#toggle-overlay');
 
   // Attach click handler for the question submit button
   function submitHandler() {
@@ -125,22 +122,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
   });
 
-  // Attach click handler for the overlay toggle button
-  overlayToggle.addEventListener('click', function () {
-    if (overlay.classList.contains('active')) {
-      // In case the overlay is open
-      overlay.classList.remove('active');
-      toggleIcon.innerHTML = LEFT_ARROW_ICON;
-    } else {
-      // In case the overlay is closed
-      overlay.classList.add('active');
-      toggleIcon.innerHTML = RIGHT_ARROW_ICON;
-
-      // Remove toggle effect
-      toggleWobble(false);
-    }
-  });
-
   // Attach click handler for the recommended questions
   questions.forEach(item => {
     item.addEventListener('click', function (event) {
@@ -150,12 +131,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
       // Only proceed in case question is defined
       if (question) {
-
-        // close Overlay
-        overlay.classList.remove('active');
-
-        // Set correct Icon for Toggler
-        toggleIcon.innerHTML = LEFT_ARROW_ICON;
 
         // Render the user message
         renderMessage(TYPE_USER, question);
@@ -402,17 +377,5 @@ function toggleProcessing(on) {
     inputField.style.display = 'block';
     inputButton.style.display = 'block';
     questionsContainer.style.display = 'flex';
-  }
-}
-
-/**
- * Toggles the Wobble animation, true=on, false=off
- * @param on
- */
-function toggleWobble(on) {
-  if (on) {
-    overlay.classList.add(WOBBLE_CLASS);
-  } else {
-    overlay.classList.remove(WOBBLE_CLASS)
   }
 }
