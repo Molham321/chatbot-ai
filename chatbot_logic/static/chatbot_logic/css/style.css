@@ -6,6 +6,7 @@ body {
 .flex {
     display: flex !important;
     align-items: center;
+    margin: 0 -85px 0 22px;
 }
 
 .container {
@@ -14,6 +15,8 @@ body {
     font-size: 10pt;
     animation: slideInLeft;
     animation-duration: 1.5s;
+    display: flex;
+    align-items: center;
 }
 
 .container.bot {
@@ -198,6 +201,8 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin: 0 126px 0 93px;
+    width 75%
 }
 
 .question {
