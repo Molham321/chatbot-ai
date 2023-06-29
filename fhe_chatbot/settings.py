@@ -24,15 +24,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ld48bzcab$7azd&k*am4ptn^x62*k6zqog$bw@fk5$kv*asm=4'
-
+SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ['DEBUG'] == "true"
+
+CSRF_COOKIE_SECURE = os.environ['CSRF_COOKIE_SECURE'] == "true"
+SESSION_COOKIE_SECURE = os.environ['SESSION_COOKIE_SECURE'] == "true"
+
+SECURE_SSL_REDIRECT = False
+SECURE_SSL_HOST = False
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
+    os.environ['ALLOWED_HOST']
 ]
-
 
 # Application definition
 
@@ -131,6 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = "./static-files/"
 
 REST_FRAMEWORK = {
     # enable JSON renderer by default

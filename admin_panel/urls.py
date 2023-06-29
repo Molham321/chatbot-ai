@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.urls import path
 from admin_panel import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'admin_panel'
 urlpatterns = [
@@ -43,5 +45,5 @@ urlpatterns = [
     path('contexts/edit/<context_id>/', views.edit_contexts_view, name='admin_contexts_edit'),
     path('contexts/edit/<context_id>/save/', views.save_contexts_view, name='admin_contexts_save'),
     path('contexts/create/', views.create_contexts_view, name='admin_contexts_create'),
-]
+]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
