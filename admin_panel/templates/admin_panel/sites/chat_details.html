@@ -3,8 +3,8 @@
 
 {% block content %}
     <div>
-        <h4>Chat-Sitzung</h4>
-        <form id="add-question-modal" class="modal">
+        <h4 style="font-size: 1.5rem; margin-bottom: 30px; font-weight: 600;">Chat-Sitzung</h4>
+        <form id="add-question-modal" class="modal" style="max-width: 700px">
             <div class="modal-content">
                 <h6>Nachricht speichern</h6>
                 <div class="input-field">
@@ -15,7 +15,7 @@
                     <label for="type">Nachricht speichern als</label>
                 </div>
                 <div class="input-field" style="margin-top: 2rem">
-                    <textarea id="message" name="message" class="materialize-textarea"></textarea>
+                    <textarea id="message" name="message" class="materialize-textarea" style="min-height: 150px; resize: vertical"></textarea>
                     <label for="message">Nachricht</label>
                 </div>
             </div>
@@ -23,17 +23,19 @@
                 <button class="btn" style="margin-right: 1rem;">Hinzufügen</button>
             </div>
         </form>
-        <form id="delete-modal" class="modal">
+        <form id="delete-modal" class="modal" method="POST" style="max-width: 500px">
             <div class="modal-content">
                 <h4>Chatverlauf löschen</h4>
                 <p>Soll der Chatverlauf wirklich gelöscht werden?</p>
             </div>
+            {% csrf_token %}
+            <input type="hidden" name="delete" value="true">
             <div class="modal-footer">
                 <button class="btn modal-close" type="button" style="margin-right: 1rem;">Nein</button>
                 <button class="btn" style="margin-right: 1rem;">Ja</button>
             </div>
         </form>
-        <table class="highlight logging-table">
+        <table class="highlight logging-table" style="margin-top: 30px">
             <thead>
             <tr>
                 <th>ID</th>
@@ -56,7 +58,7 @@
                             Besucher
                         {% elif message.user.id is not None %}
                             <i class="material-icons" style="font-size: 1.2rem">work</i>
-                            {{ chat.user.username }}
+                            {{ message.user }}
                         {% else %}
                             <i class="material-icons" style="font-size: 1.2rem">computer</i>
                             Chatbot
@@ -70,12 +72,14 @@
                         {{ message.message }}
                     </td>
                     <td>
-                        <a 
-                           data-add-question="{{ message.message }}"
-                           class="waves-effect waves-light btn-small"
-                           title="Bearbeiten">
-                            <i class="material-icons">add</i>
-                        </a>
+                        {% if message.from_guest or message.user.id is not None %}
+                            <a
+                               data-add-question="{{ message.message }}"
+                               class="waves-effect waves-light btn-small"
+                               title="Nachricht speichern">
+                                <i class="material-icons">add</i>
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -131,6 +135,8 @@
 
             window.open(targetPath + "?message=" + messageElement.value, '_blank');
         })
+
+
     });
 </script>
 {% endblock %}

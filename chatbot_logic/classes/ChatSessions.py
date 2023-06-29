@@ -77,6 +77,10 @@ class ChatSessions(metaclass=Singleton):
         except Chat.DoesNotExist:
             return None
 
+    def delete_chat(self, chat_id):
+        Chat.objects.filter(id=chat_id).delete()
+        ChatMessage.objects.filter(chat_id=chat_id).delete()
+
     @database_sync_to_async
     def store_message(self, chat, message, from_guest=True, user=None):
         chat_message = ChatMessage()

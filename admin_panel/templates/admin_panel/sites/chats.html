@@ -53,30 +53,43 @@
                 </tbody>
             </table>
 
-            {{ chats.num_pages }}
+            {% if chats.paginator.num_pages > 1 %}
 
-            <div class="pagination">
-                <span class="step-links">
+                <ul class="pagination" style="text-align: center">
+
                     {% if chats.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ chats.previous_page_number }}">previous</a>
+                        <li class="waves-effect"><a
+                                href="?page={{ chats.previous_page_number }}"><i
+                                class="material-icons">chevron_left</i></a></li>
+                    {% else %}
+                        <li class="disabled"><a
+                                href="#"><i
+                                class="material-icons">chevron_left</i></a></li>
                     {% endif %}
 
-                    <span class="current">
-                        Page {{ chats.number }} of {{ chats.paginator.num_pages }} -
-                        Total: {{ chats.paginator.count }}
-                    </span>
+                    {% for page in chats.paginator.page_range %}
+                        <li class="waves-effect {% if page == chats.number %}active{% endif %}"><a
+                                href="?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
 
                     {% if chats.has_next %}
-                        <a href="?page={{ chats.next_page_number }}">next</a>
-                        <a href="?page={{ chats.paginator.num_pages }}">last &raquo;</a>
+                        <li class="waves-effect"><a
+                                href="?page={{ chats.next_page_number }}"><i
+                                class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a
+                                href="#"><i
+                                class="material-icons">chevron_right</i></a></li>
                     {% endif %}
-                </span>
-            </div>
+
+                </ul>
+
+            {% endif %}
         </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
-        <script src="{% static 'admin_panel/js/chat_session_overview.js' %}"></script>
+    <script src="{% static 'admin_panel/js/chat_session_overview.js' %}"></script>
 {% endblock %}

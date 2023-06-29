@@ -486,12 +486,17 @@ def chat_detail_view(request, chat_id):
         chat_sessions = ChatSessions()
         chat = chat_sessions.get_chat(chat_id=chat_id)
 
+        if request.method == 'POST' and "delete" in request.POST:
+            chat_sessions.delete_chat(chat_id=chat_id)
+            return redirect('admin_panel:admin_chat')
+
         return render(request, 'admin_panel/sites/chat_details.html',
                       {
                           'chat': chat
                       })
     else:
         return redirect('admin_panel:admin_login')
+
 
 def chat_view(request, session_token):
     if request.user.is_authenticated:
