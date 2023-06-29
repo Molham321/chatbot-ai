@@ -236,8 +236,10 @@ def create_questions_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        message = request.GET.get('message', 'Neue Frage')
+
         question = Question()
-        question.question_text = 'Neue Frage'
+        question.question_text = message
         question.save()
         return redirect('admin_panel:admin_questions_edit', question_id=question.id)
     else:
@@ -293,8 +295,10 @@ def create_answers_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        message = request.GET.get('message', 'Neue Frage')
+
         answer = Answer()
-        answer.answer_text = 'Neue Antwort'
+        answer.answer_text = message
         answer.save()
         return redirect('admin_panel:admin_answers_edit', answer_id=answer.id)
     else:
