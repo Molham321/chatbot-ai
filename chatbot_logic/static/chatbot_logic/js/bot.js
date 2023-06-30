@@ -32,7 +32,6 @@ const TYPE_EMPLOYEE = 'employee';
 const TYPE_SYSTEM = 'system';
 
 
-
 /**
  * Special secret easer egg class
  * @type {string}
@@ -70,6 +69,12 @@ const LEFT_ARROW_ICON = 'chevron_left';
 const ERROR_MESSAGE = 'Entschuldigung, es liegt zur Zeit ein technisches Problem vor. Bitte versuch es später nochmal.';
 
 
+/**
+ * Defines how long to wait until not typing any key counts as "not typing" in milliseconds
+ * @type {number}
+ */
+const typingDelay = 5000;
+
 // Fetch csrf Token from cookie.
 const csrftoken = getCookie('csrftoken');
 
@@ -87,6 +92,11 @@ var progressBar = document.getElementById('progress-bar');
 var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
 var overlay = document.querySelector('.more-information-container');
+
+
+var typingIndicator = document.getElementById('typing-indicator');
+var typingTimer;
+var isUserTyping = false
 
 let webSocket;
 
@@ -117,6 +127,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
         } else {
             // Check for easter egg
             easterEgg(sendButton);
+        }
+    });
+
+    messageInput.addEventListener('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function () {
+            sendTypingStateToSocket(false);
+        }, typingDelay);
+
+        if (!isUserTyping) {
+            sendTypingStateToSocket(true);
         }
     });
 
@@ -204,7 +225,9 @@ function onWebSocketMessage(event) {
         renderMessage(sender, data.message);
         toggleProcessing(false);
 
-        renderAssumedAnswers(data.answer.assumed_answers);
+        if (data.answer) {
+            renderAssumedAnswers(data.answer.assumed_answers);
+        }
 
         if (firstQuestion) {
             toggleWobble(true);
@@ -218,6 +241,22 @@ function onWebSocketMessage(event) {
     } else if (type === 'employee_disconnected') {
         isEmployeeConnected = false
         renderMessage(sender, data.message);
+    } else if (type === 'typing_state_changed') {
+        let typingState = Boolean(data.is_typing);
+        setTypingState(typingState)
+    }
+}
+
+
+/**
+ * Toggles the visibility of the typing indicator
+ * @param isOtherUserTyping true, if the indicator should be visible otherwise false
+ */
+function setTypingState(isOtherUserTyping) {
+    if (isOtherUserTyping) {
+        typingIndicator.classList.remove('hidden');
+    } else {
+        typingIndicator.classList.add('hidden');
     }
 }
 
@@ -298,6 +337,21 @@ function sendRequestToSocket(_text) {
     }
 
     webSocket.send(JSON.stringify(body));
+}
+
+
+/**
+ * Informs the server whether the current user is typing or not
+ * @param _isTyping
+ */
+function sendTypingStateToSocket(_isTyping) {
+    isUserTyping = _isTyping;
+    let body = {
+        'service_message': 'typing',
+        'is_typing': _isTyping,
+    }
+
+    webSocket.send(JSON.stringify(body))
 }
 
 /**

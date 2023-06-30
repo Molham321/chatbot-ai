@@ -148,6 +148,27 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
 
+        if 'service_message' in text_data_json:
+            await self.resolve_received_service_message(text_data_json)
+            return
+
+        await self.resolve_received_text_message(text_data_json)
+
+    async def resolve_received_service_message(self, text_data_json):
+        if text_data_json["service_message"] == "typing":
+            print("Someone is typing...")
+
+            await self.channel_layer.group_send(
+                self.session_token,
+                {
+                    "type": "forward_typing_state",
+                    "is_typing": text_data_json["is_typing"] == True,
+                    "sender": "employee" if self.user is not None else "user",
+                    "sender_channel_name": self.channel_name
+                }
+            )
+
+    async def resolve_received_text_message(self, text_data_json):
         message = text_data_json["message"]
 
         if "sender" in text_data_json and (text_data_json["sender"] == "bot"):
@@ -206,6 +227,22 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                     {
                         "sender": sender,
                         "message": message
+                    }
+                )
+            )
+
+    async def forward_typing_state(self, event):
+        is_typing = event["is_typing"]
+        sender = event["sender"]
+        sender_channel_name = event["sender_channel_name"]
+
+        if self.channel_name != sender_channel_name:
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "type": "typing_state_changed",
+                        "sender": sender,
+                        "is_typing": is_typing
                     }
                 )
             )
@@ -341,5 +378,5 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             )
         )
 
-#    async def instantiate_chat(self, chat_session):
-#        existing_chat =
+        #    async def instantiate_chat(self, chat_session):
+        #        existing_chat =

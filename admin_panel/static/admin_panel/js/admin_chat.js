@@ -27,10 +27,20 @@ const TYPE_EMPLOYEE = 'employee';
  */
 const TYPE_SYSTEM = 'system';
 
+/**
+ * Defines how long to wait until not typing any key counts as "not typing" in milliseconds
+ * @type {number}
+ */
+const typingDelay = 5000;
+
 
 var root = document.querySelector('html');
 var messageInput = document.getElementById('actual-message');
 var sendButton = document.getElementById('send-button');
+var typingIndicator = document.getElementById('typing-indicator');
+var typingTimer;
+var isUserTyping = false
+
 document.addEventListener("DOMContentLoaded", function (event) {
 
     const SESSION_TOKEN = document.getElementById('session-token').value
@@ -43,8 +53,20 @@ document.addEventListener("DOMContentLoaded", function (event) {
     messageInput.addEventListener('keyup', function (event) {
         if (event.code === 'Enter' && !event.shiftKey) {
             submitMessage()
+            clearTimeout(typingTimer)
         }
     })
+
+    messageInput.addEventListener('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function () {
+            sendTypingStateToSocket(false);
+        }, typingDelay);
+
+        if (!isUserTyping) {
+            sendTypingStateToSocket(true);
+        }
+    });
 
     function submitMessage() {
         var text = messageInput.value;
@@ -98,8 +120,24 @@ function onWebSocketMessage(event) {
         }
     } else if (type === 'guest_disconnected') {
         renderMessage(sender, data.message)
+        setTypingState(false);
         messageInput.disabled = true;
         sendButton.disabled = true;
+    } else if (type === 'typing_state_changed') {
+        let typingState = Boolean(data.is_typing);
+        setTypingState(typingState)
+    }
+}
+
+/**
+ * Toggles the visibility of the typing indicator
+ * @param isOtherUserTyping true, if the indicator should be visible otherwise false
+ */
+function setTypingState(isOtherUserTyping) {
+    if (isOtherUserTyping) {
+        typingIndicator.classList.remove('hidden');
+    } else {
+        typingIndicator.classList.add('hidden');
     }
 }
 
@@ -200,6 +238,20 @@ function sendRequestToSocket(_text) {
     }
 
     webSocket.send(JSON.stringify(body));
+}
+
+/**
+ * Informs the server whether the current user is typing or not
+ * @param _isTyping
+ */
+function sendTypingStateToSocket(_isTyping) {
+    isUserTyping = _isTyping;
+    let body = {
+        'service_message': 'typing',
+        'is_typing': _isTyping,
+    }
+
+    webSocket.send(JSON.stringify(body))
 }
 
 
