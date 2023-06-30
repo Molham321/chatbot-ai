@@ -1,4 +1,5 @@
 import json
+import asyncio
 
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
@@ -26,6 +27,7 @@ def get_settings():
             employee_joined_text='',
             employee_left_text='',
             user_left_text='',
+
         )
         return settings
 
@@ -41,6 +43,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         self.chat = None
         self.user = None
         self.is_private = False
+        self.is_interrupted = False
 
     async def connect(self):
         self.session_token = self.scope["url_route"]["kwargs"]["session"]
@@ -256,6 +259,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         await self.get_chat()
         self.chat.user = event["user"]
 
+        self.is_interrupted = True
+
         await self.send(
             text_data=json.dumps(
                 {
@@ -305,12 +310,17 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         return self.chat
 
+    async def refresh_chat(self):
+        self.chat = await self.chat_sessions.instantiate_chat(self.chat_session)
+
     async def get_chat_messages(self):
         chat = await self.chat_sessions.get_chat_messages_from_active_session(session=self.chat_session)
         return chat
 
     async def ask_question(self, event):
         question = event["question"]
+
+        self.is_interrupted = False
 
         await self.send(
             text_data=json.dumps(
@@ -322,8 +332,20 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             )
         )
 
+        await asyncio.sleep(2)
+
+        await self.refresh_chat()
+
+        if self.chat.user is not None:
+            return
+
         answer = await self.match_question(question)
         serializer = AnswerSetSerializer(answer)
+
+        await self.refresh_chat()
+
+        if self.chat.user is not None:
+            return
 
         message = answer.answer.answer_text
 

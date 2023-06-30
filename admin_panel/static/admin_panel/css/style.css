@@ -205,7 +205,7 @@ p.matching-radio > label {
 }
 
 .toggle-button:hover, .toggle-button:focus {
-     background-color: darkgrey !important;
+    background-color: darkgrey !important;
 }
 
 .toggle-button.active {
@@ -213,7 +213,7 @@ p.matching-radio > label {
 }
 
 .toggle-button.active:hover, .toggle-button.active:focus {
-   background-color: mediumseagreen !important;
+    background-color: mediumseagreen !important;
 }
 
 .chats-row {
@@ -233,4 +233,8 @@ p.matching-radio > label {
 
 .chats-row .old-chats {
     flex: 2;
+}
+
+#auto-connect-toggle-container {
+    margin-bottom: 25px;
 }
