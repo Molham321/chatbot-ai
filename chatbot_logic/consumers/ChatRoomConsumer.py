@@ -8,7 +8,11 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from admin_panel.models import AdminSettings
 from chatbot_logic.api.serializers import AnswerSetSerializer
 from chatbot_logic.classes.ChatSessions import ChatSessions
+from chatbot_logic.classes.EmailService import EmailService
 from chatbot_logic.controllers.MatchController import MatchController
+
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 
 @database_sync_to_async
@@ -44,6 +48,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         self.user = None
         self.is_private = False
         self.is_interrupted = False
+
+        self.email_state = None
 
     async def connect(self):
         self.session_token = self.scope["url_route"]["kwargs"]["session"]
@@ -170,6 +176,10 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                     "sender_channel_name": self.channel_name
                 }
             )
+        if text_data_json["service_message"] == "send_mail":
+            print("Someone wants to send a mail...")
+
+            await self.send_mail_request_message()
 
     async def resolve_received_text_message(self, text_data_json):
         message = text_data_json["message"]
@@ -185,7 +195,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         user = self.user
         is_guest_message = True if user is None else False
 
-        await self.chat_sessions.store_message(chat, message, is_guest_message, user)
+        if self.email_state is None:
+            await self.chat_sessions.store_message(chat, message, is_guest_message, user)
 
         if is_new_chat:
             await self.channel_layer.group_send(
@@ -211,13 +222,22 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         if self.chat.user is not None:
             return
 
-        await self.channel_layer.group_send(
-            self.session_token,
-            {
-                "type": "ask_question",
-                "question": message
-            }
-        )
+        if self.email_state is None:
+            await self.channel_layer.group_send(
+                self.session_token,
+                {
+                    "type": "ask_question",
+                    "question": message
+                }
+            )
+        else:
+            await self.channel_layer.group_send(
+                self.session_token,
+                {
+                    "type": "handle_email",
+                    "message": message
+                }
+            )
 
     async def forward_message(self, event):
         message = event["message"]
@@ -256,6 +276,30 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 {
                     "sender": "bot",
                     "message": self.settings.greeting_text
+                }
+            )
+        )
+
+    async def send_mail_request_message(self):
+        self.email_state = "request"
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "sender": "bot",
+                    "message": self.settings.mail_request_text,
+                    "type": "reply",
+                    "answer": {
+                        "answer": self.settings.mail_request_text,
+                        "assumed_answers": [
+                            {
+                                "question_text": "Ja"
+                            },
+                            {
+                                "question_text": "Nein"
+                            }
+                        ]
+                    }
                 }
             )
         )
@@ -402,3 +446,75 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         #    async def instantiate_chat(self, chat_session):
         #        existing_chat =
+
+    async def handle_email(self, event):
+        message = event["message"]
+
+        await asyncio.sleep(1)
+
+        if self.email_state == "request":
+
+            if message == "Ja":
+                self.email_state = "input"
+
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            "sender": "bot",
+                            "type": "reply",
+                            "mail_state": "input",
+                            "message": self.settings.mail_input_text
+                        }
+                    )
+                )
+            else:
+                self.email_state = None
+
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            "sender": "bot",
+                            "type": "reply",
+                            "mail_state": None,
+                            "message": self.settings.mail_cancel_text
+                        }
+                    )
+                )
+
+        elif self.email_state == "input":
+            try:
+                validate_email(message)
+
+                await self.send_email(message)
+
+                self.email_state = None
+
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            "sender": "bot",
+                            "type": "reply",
+                            "mail_state": "submitted",
+                            "message": self.settings.mail_sent_text
+                        }
+                    )
+                )
+            except ValidationError as e:
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            "sender": "bot",
+                            "type": "reply",
+                            "mail_state": "input",
+                            "message": self.settings.mail_invalid_input_text
+                        }
+                    )
+                )
+
+    @sync_to_async
+    def send_email(self, recipient):
+        email_service = EmailService()
+
+        print("asdf")
+
+        email_service.send_email(self.chat_session, recipient)

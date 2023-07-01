@@ -38,6 +38,12 @@ saveBtn.onclick = function () {
     let similarityThreshold = document.getElementById('similarity-threshold').value;
     let qualityTestAnswers = document.getElementById('quality-test-answers').value;
 
+    let mailRequestText = document.getElementById('mail-request-text').value;
+    let mailSentText = document.getElementById('mail-sent-text').value;
+    let mailInputText = document.getElementById('mail-input-text').value;
+    let mailInvalidInputText = document.getElementById('mail-invalid-input-text').value;
+    let mailCancelText = document.getElementById('mail-cancel-text').value;
+
     let data = {
         'greeting_text': greeting,
         'noanswer_text': noanswer,
@@ -49,7 +55,12 @@ saveBtn.onclick = function () {
         'matching_method': algorithm,
         'mail_timeout': mailTimeout,
         'similarity_threshold': similarityThreshold,
-        'quality_test_answers': qualityTestAnswers
+        'quality_test_answers': qualityTestAnswers,
+        'mail_request_text': mailRequestText,
+        'mail_sent_text': mailSentText,
+        'mail_input_text': mailInputText,
+        'mail_invalid_input_text': mailInvalidInputText,
+        'mail_cancel_text': mailCancelText,
     }
 
     console.log(data);

@@ -1,0 +1,24 @@
+<p>Ein Gast hat über den Chatbot folgende Fragen gestellt:</p>
+
+<dt>Datum</dt>
+<dd>{{ chat.created_at }}</dd>
+<dt>Absender</dt>
+<dd>{{ reply_to }}</dd>
+
+<ul>
+    {% for message in messages %}
+        <li>
+            <b>
+                {% if message.from_guest %}
+                    Gast:
+                {% elif message.user is None %}
+                    Bot:
+                {% else %}
+                    {{ message.user }}:
+                {% endif %}
+            </b>
+
+            <span>{{ message.message }}</span>
+        </li>
+    {% endfor %}
+</ul>

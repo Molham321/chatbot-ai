@@ -221,7 +221,7 @@ body {
     height: 50px;
     flex: 1;
     text-align: center;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
 }
