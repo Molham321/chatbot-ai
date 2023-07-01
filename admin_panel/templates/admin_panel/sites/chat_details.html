@@ -1,0 +1,142 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+    <div>
+        <h4 style="font-size: 1.5rem; margin-bottom: 30px; font-weight: 600;">Chat-Sitzung</h4>
+        <form id="add-question-modal" class="modal" style="max-width: 700px">
+            <div class="modal-content">
+                <h6>Nachricht speichern</h6>
+                <div class="input-field">
+                    <select id="type" required>
+                        <option value="question">Frage</option>
+                        <option value="answer">Antwort</option>
+                    </select>
+                    <label for="type">Nachricht speichern als</label>
+                </div>
+                <div class="input-field" style="margin-top: 2rem">
+                    <textarea id="message" name="message" class="materialize-textarea" style="min-height: 150px; resize: vertical"></textarea>
+                    <label for="message">Nachricht</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" style="margin-right: 1rem;">Hinzufügen</button>
+            </div>
+        </form>
+        <form id="delete-modal" class="modal" method="POST" style="max-width: 500px">
+            <div class="modal-content">
+                <h4>Chatverlauf löschen</h4>
+                <p>Soll der Chatverlauf wirklich gelöscht werden?</p>
+            </div>
+            {% csrf_token %}
+            <input type="hidden" name="delete" value="true">
+            <div class="modal-footer">
+                <button class="btn modal-close" type="button" style="margin-right: 1rem;">Nein</button>
+                <button class="btn" style="margin-right: 1rem;">Ja</button>
+            </div>
+        </form>
+        <table class="highlight logging-table" style="margin-top: 30px">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Absender</th>
+                <th>Uhrzeit</th>
+                <th>Nachricht</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for message in chat.chatmessage_set.all %}
+                <tr>
+                    <td>
+                        {{ message.id }}
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
+                        {% if message.from_guest %}
+                            <i class="material-icons" style="font-size: 1.2rem">person</i>
+                            Besucher
+                        {% elif message.user.id is not None %}
+                            <i class="material-icons" style="font-size: 1.2rem">work</i>
+                            {{ message.user }}
+                        {% else %}
+                            <i class="material-icons" style="font-size: 1.2rem">computer</i>
+                            Chatbot
+                        {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {{ message.created_at.time }}
+                    </td>
+                    <td>
+                        {{ message.message }}
+                    </td>
+                    <td>
+                        {% if message.from_guest or message.user.id is not None %}
+                            <a
+                               data-add-question="{{ message.message }}"
+                               class="waves-effect waves-light btn-small"
+                               title="Nachricht speichern">
+                                <i class="material-icons">add</i>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin-top: 1rem; display: flex; gap: 2rem; justify-content: center">
+            <a href="{% url "admin_panel:admin_chat" %}" class="btn">Zurück</a>
+            <a class="btn modal-trigger" href="#delete-modal">
+                <i class="material-icons left">delete</i>
+                Löschen
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addQuestionModal = document.getElementById("add-question-modal");
+        const deleteModal = document.getElementById("delete-modal");
+
+        const questionInstance = M.Modal.init(addQuestionModal);
+        M.Modal.init(deleteModal)
+
+        const selects = document.querySelectorAll('select');
+
+        const messageElement = addQuestionModal.querySelector('#message');
+        const typeElement = addQuestionModal.querySelector("#type");
+
+        M.FormSelect.init(selects);
+
+        document.querySelectorAll('[data-add-question]').forEach(function(element) {
+            const message = element.getAttribute('data-add-question');
+
+            element.addEventListener('click', function() {
+                messageElement.value = message;
+                M.textareaAutoResize(messageElement)
+                M.updateTextFields();
+
+                questionInstance.open()
+            })
+        })
+
+        addQuestionModal.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let targetPath = "";
+
+            if(typeElement.value === 'question')
+                targetPath = "{% url 'admin_panel:admin_questions_create' %}";
+            else
+                targetPath = "{% url 'admin_panel:admin_answers_create' %}";
+
+            window.open(targetPath + "?message=" + messageElement.value, '_blank');
+        })
+
+
+    });
+</script>
+{% endblock %}

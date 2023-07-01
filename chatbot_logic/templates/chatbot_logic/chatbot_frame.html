@@ -20,13 +20,14 @@
     <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/materialize.min.css" %}" media="screen,projection"/>
     <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/style.css" %}">
 
-
     <title>Chatbot</title>
 </head>
 
 <body class="disable-scrollbars">
 
-{% include 'chatbot_logic/chatbot_content.html' with settings=settings %}
+<div id="chat">
+    {% include 'chatbot_logic/chatbot_content.html' with settings=settings %}
+</div>
 
 <script type="text/javascript" src="{% static "chatbot_logic/js/materialize.min.js" %}"></script>
 <script src="{% static "chatbot_logic/js/bot.js" %}"></script>

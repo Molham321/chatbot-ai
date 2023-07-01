@@ -1,4 +1,5 @@
 import json
+import asyncio
 
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
@@ -26,6 +27,7 @@ def get_settings():
             employee_joined_text='',
             employee_left_text='',
             user_left_text='',
+
         )
         return settings
 
@@ -41,6 +43,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         self.chat = None
         self.user = None
         self.is_private = False
+        self.is_interrupted = False
 
     async def connect(self):
         self.session_token = self.scope["url_route"]["kwargs"]["session"]
@@ -148,6 +151,27 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
 
+        if 'service_message' in text_data_json:
+            await self.resolve_received_service_message(text_data_json)
+            return
+
+        await self.resolve_received_text_message(text_data_json)
+
+    async def resolve_received_service_message(self, text_data_json):
+        if text_data_json["service_message"] == "typing":
+            print("Someone is typing...")
+
+            await self.channel_layer.group_send(
+                self.session_token,
+                {
+                    "type": "forward_typing_state",
+                    "is_typing": text_data_json["is_typing"] == True,
+                    "sender": "employee" if self.user is not None else "user",
+                    "sender_channel_name": self.channel_name
+                }
+            )
+
+    async def resolve_received_text_message(self, text_data_json):
         message = text_data_json["message"]
 
         if "sender" in text_data_json and (text_data_json["sender"] == "bot"):
@@ -210,6 +234,22 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 )
             )
 
+    async def forward_typing_state(self, event):
+        is_typing = event["is_typing"]
+        sender = event["sender"]
+        sender_channel_name = event["sender_channel_name"]
+
+        if self.channel_name != sender_channel_name:
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "type": "typing_state_changed",
+                        "sender": sender,
+                        "is_typing": is_typing
+                    }
+                )
+            )
+
     async def send_greeting_message(self):
         await self.send(
             text_data=json.dumps(
@@ -255,6 +295,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         await self.get_chat()
         self.chat.user = event["user"]
+
+        self.is_interrupted = True
 
         await self.send(
             text_data=json.dumps(
@@ -305,12 +347,17 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         return self.chat
 
+    async def refresh_chat(self):
+        self.chat = await self.chat_sessions.instantiate_chat(self.chat_session)
+
     async def get_chat_messages(self):
         chat = await self.chat_sessions.get_chat_messages_from_active_session(session=self.chat_session)
         return chat
 
     async def ask_question(self, event):
         question = event["question"]
+
+        self.is_interrupted = False
 
         await self.send(
             text_data=json.dumps(
@@ -322,8 +369,20 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             )
         )
 
+        await asyncio.sleep(2)
+
+        await self.refresh_chat()
+
+        if self.chat.user is not None:
+            return
+
         answer = await self.match_question(question)
         serializer = AnswerSetSerializer(answer)
+
+        await self.refresh_chat()
+
+        if self.chat.user is not None:
+            return
 
         message = answer.answer.answer_text
 
@@ -341,5 +400,5 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             )
         )
 
-#    async def instantiate_chat(self, chat_session):
-#        existing_chat =
+        #    async def instantiate_chat(self, chat_session):
+        #        existing_chat =

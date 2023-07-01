@@ -77,6 +77,29 @@ class AdminChatOverviewConsumer(AsyncWebsocketConsumer):
                     }
                 )
             )
+        elif data["event"] == "join_request":
+            await self.channel_layer.group_send(
+                "admin_group",
+                {
+                    "type": "send_join_request_answer",
+                    "requestor_session_token": data["requestor_session_token"],
+                    "chat_session_token": data["chat_session_token"],
+                }
+            )
+
+    async def send_join_request_answer(self, event):
+        requestor_session_token = event["requestor_session_token"]
+        chat_session_token = event["chat_session_token"]
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "event": "join_request_answer",
+                    "chat_session_token": chat_session_token,
+                    "requestor_session_token": requestor_session_token
+                }
+            )
+        )
 
     async def new_chat_session(self, event):
         session_token = event["session_token"]
