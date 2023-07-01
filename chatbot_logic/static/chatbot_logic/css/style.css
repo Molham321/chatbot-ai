@@ -202,7 +202,7 @@ body {
     flex-direction: row;
     justify-content: center;
     margin: 0 126px 0 93px;
-    width 75%
+    width: 75%
 }
 
 .container.bot.row {
@@ -224,7 +224,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
 }
 
 .faq-text {

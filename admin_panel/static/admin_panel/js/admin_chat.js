@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     // Attach click handler for the question submit button
     sendButton.addEventListener('click', submitMessage);
-    messageInput.addEventListener('keyup', function (event) {
+    messageInput.addEventListener('keypress', function (event) {
         if (event.code === 'Enter' && !event.shiftKey) {
             submitMessage()
         }

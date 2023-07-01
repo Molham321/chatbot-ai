@@ -25,7 +25,9 @@
 
 <body class="disable-scrollbars">
 
-{% include 'chatbot_logic/chatbot_content.html' with settings=settings %}
+<div id="chat">
+    {% include 'chatbot_logic/chatbot_content.html' with settings=settings %}
+</div>
 
 <script type="text/javascript" src="{% static "chatbot_logic/js/materialize.min.js" %}"></script>
 <script src="{% static "chatbot_logic/js/bot.js" %}"></script>

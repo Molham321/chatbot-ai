@@ -3488,6 +3488,10 @@ table span.badge {
   min-height: 1px;
 }
 
+.row .col[class*="push-"], .row .col[class*="pull-"] {
+  position: relative;
+}
+
 .row .col.s1 {
   width: 8.3333333333%;
   margin-left: auto;
@@ -3567,7 +3571,7 @@ table span.badge {
 
 .row .col.s12 {
   width: 100%;
-  margin: 0 170px 0 28px;
+  margin-left: auto;
   left: auto;
   right: auto;
 }
@@ -3589,7 +3593,7 @@ table span.badge {
 }
 
 .row .col.pull-s2 {
-  right: 0;
+  right: 16.6666666667%;
 }
 
 .row .col.push-s2 {

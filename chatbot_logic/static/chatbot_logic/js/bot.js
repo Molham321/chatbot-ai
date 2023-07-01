@@ -115,9 +115,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 
+    sendButton.addEventListener('click', submitHandler);
   // Attach keypress handler for the enter key
   messageInput.addEventListener('keypress', function (event) {
-    if (event.key === "Enter" && messageInput.value.trim() !== '') {
+        if (event.code === 'Enter' && !event.shiftKey) {
       submitHandler();
     }
   });
