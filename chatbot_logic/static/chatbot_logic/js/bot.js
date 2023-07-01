@@ -19,6 +19,20 @@ const TYPE_BOT = 'bot';
 const TYPE_USER = 'user';
 
 /**
+ * String which defines the employee type for message rendering.
+ * @type {string}
+ */
+const TYPE_EMPLOYEE = 'employee';
+
+
+/**
+ * String which defines the system type for message rendering.
+ * @type {string}
+ */
+const TYPE_SYSTEM = 'system';
+
+
+/**
  * Special secret easer egg class
  * @type {string}
  */
@@ -55,6 +69,12 @@ const LEFT_ARROW_ICON = 'chevron_left';
 const ERROR_MESSAGE = 'Entschuldigung, es liegt zur Zeit ein technisches Problem vor. Bitte versuch es später nochmal.';
 
 
+/**
+ * Defines how long to wait until not typing any key counts as "not typing" in milliseconds
+ * @type {number}
+ */
+const typingDelay = 5000;
+
 // Fetch csrf Token from cookie.
 const csrftoken = getCookie('csrftoken');
 
@@ -64,36 +84,41 @@ var missCounter = 0;
 // Used to trigger the wobble animation
 var firstQuestion = true;
 
+var isEmployeeConnected = false;
+
 // Get global selectors which are used in different scopes
 var root = document.querySelector('html');
 var progressBar = document.getElementById('progress-bar');
 var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
-var overlay = document.querySelector('.more-information-container');
+var questionsContainer = document.querySelector('.questions-container');
+
+
+var typingIndicator = document.getElementById('typing-indicator');
+var typingTimer;
+var isUserTyping = false
 
 let webSocket;
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    var sendButton = document.getElementById('send-button');
-    var messageInput = document.getElementById('actual-message');
-    var toggleIcon = document.querySelector('#toggle-icon');
-    var questions = document.querySelectorAll('.question');
-    var overlayToggle = document.querySelector('#toggle-overlay');
+  var sendButton = document.getElementById('send-button');
+  var messageInput = document.getElementById('actual-message');
+  var questions = document.querySelectorAll('.question');
 
-    // Attach click handler for the question submit button
-    sendButton.addEventListener('click', function () {
-        var text = messageInput.value;
+  // Attach click handler for the question submit button
+  function submitHandler() {
+    var text = messageInput.value;
 
-        if (text.length) {
-            // Reset miss counter (easter egg)
-            missCounter = 0;
+    if (text.length) {
+        // Reset miss counter (easter egg)
+        missCounter = 0;
 
-            // Empty Input value
-            messageInput.value = '';
+        // Empty Input value
+        messageInput.value = '';
 
-            // Render the user message
-            renderMessage(TYPE_USER, text);
+        // Render the user message
+        renderMessage(TYPE_USER, text);
 
             // Fetch question and display it
             sendRequestToSocket(text);
@@ -101,42 +126,39 @@ document.addEventListener("DOMContentLoaded", function (event) {
             // Check for easter egg
             easterEgg(sendButton);
         }
-    });
+    }
 
-    // Attach click handler for the overlay toggle button
-    overlayToggle.addEventListener('click', function () {
-        if (overlay.classList.contains('active')) {
-            // In case the overlay is open
-            overlay.classList.remove('active');
-            toggleIcon.innerHTML = LEFT_ARROW_ICON;
-        } else {
-            // In case the overlay is closed
-            overlay.classList.add('active');
-            toggleIcon.innerHTML = RIGHT_ARROW_ICON;
+    messageInput.addEventListener('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function () {
+            sendTypingStateToSocket(false);
+        }, typingDelay);
 
-            // Remove toggle effect
-            toggleWobble(false);
+        if (!isUserTyping) {
+            sendTypingStateToSocket(true);
         }
     });
 
-    // Attach click handler for the recommended questions
-    questions.forEach(item => {
-        item.addEventListener('click', function (event) {
+    sendButton.addEventListener('click', submitHandler);
+  // Attach keypress handler for the enter key
+  messageInput.addEventListener('keypress', function (event) {
+        if (event.code === 'Enter' && !event.shiftKey) {
+      submitHandler();
+    }
+  });
 
-            // Get the question value from data attribute
-            var question = event.target.getAttribute('data-question');
+  // Attach click handler for the recommended questions
+  questions.forEach(item => {
+    item.addEventListener('click', function (event) {
 
-            // Only proceed in case question is defined
-            if (question) {
+      // Get the question value from data attribute
+      var question = event.target.getAttribute('data-question');
 
-                // close Overlay
-                overlay.classList.remove('active');
+      // Only proceed in case question is defined
+      if (question) {
 
-                // Set correct Icon for Toggler
-                toggleIcon.innerHTML = LEFT_ARROW_ICON;
-
-                // Render the user message
-                renderMessage(TYPE_USER, question);
+        // Render the user message
+        renderMessage(TYPE_USER, question);
 
                 // Fetch question and display it
                 sendRequestToSocket(question);
@@ -176,21 +198,52 @@ function onWebSocketMessage(event) {
     let sender = TYPE_USER;
     let type = data.type || 'reply';
 
-    if(data.sender === 'bot')
+    if (data.sender === 'bot')
         sender = TYPE_BOT;
+    else if (data.sender === 'system')
+        sender = TYPE_SYSTEM
+    else if (data.sender === 'employee') {
+            sender = TYPE_EMPLOYEE
+            questionsContainer.style.display = "none"
+    }
 
-    if(type === 'reply') {
+    if (type === 'reply') {
         renderMessage(sender, data.message);
         toggleProcessing(false);
 
-        renderAssumedAnswers(data.answer.assumed_answers);
+        if (data.answer) {
+            renderAssumedAnswers(data.answer.assumed_answers);
+        }
 
-        if(firstQuestion) {
-            toggleWobble(true);
+        if (firstQuestion) {
             firstQuestion = false;
         }
-    } else if(type === 'loading') {
+    } else if (type === 'loading') {
         toggleProcessing(true);
+    } else if (type === 'employee_joined') {
+        isEmployeeConnected = true
+        questionsContainer.style.display = "none"
+        renderMessage(sender, data.message);
+        toggleProcessing(false);
+    } else if (type === 'employee_disconnected') {
+        isEmployeeConnected = false
+        renderMessage(sender, data.message);
+    } else if (type === 'typing_state_changed') {
+        let typingState = Boolean(data.is_typing);
+        setTypingState(typingState)
+    }
+}
+
+
+/**
+ * Toggles the visibility of the typing indicator
+ * @param isOtherUserTyping true, if the indicator should be visible otherwise false
+ */
+function setTypingState(isOtherUserTyping) {
+    if (isOtherUserTyping) {
+        typingIndicator.classList.remove('hidden');
+    } else {
+        typingIndicator.classList.add('hidden');
     }
 }
 
@@ -200,14 +253,11 @@ function onWebSocketMessage(event) {
  * @param text
  */
 function renderMessage(type, text) {
-    var html = '';
-    var history = document.getElementById('chat-history');
+  var html = '';
+  var history = document.getElementById('chat-history');
 
     if (type === TYPE_USER) {
         html = '<div class="container bot row">\n' +
-            '    <div class="container-image user col s2 push-s10">\n' +
-            '        <img class="avatar-image" src="data:image/svg+xml,%3Csvg height=\'512pt\' viewBox=\'0 0 512 512.00019\' width=\'512pt\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'m256 511.996094c-141.484375 0-256-114.65625-256-255.996094 0-141.488281 114.496094-256 256-256 141.488281 0 255.996094 114.496094 255.996094 256 0 141.476562-114.667969 255.996094-255.996094 255.996094zm0 0\' fill=\'%2366a9df\'/%3E%3Cpath d=\'m25%0A6 0v511.996094c141.328125 0 255.996094-114.519532 255.996094-255.996094 0-141.5-114.507813-256-255.996094-256zm0 0\' fill=\'%234f84cf\'/%3E%3Cpath d=\'m256 316c-74.488281 0-145.511719 32.5625-197.417969 102.96875 103.363281 124.941406 294.6875 123.875 396.65625-2.230469-25.179687-25.046875-81.894531-100.738281-199.238281-100.738281zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m455.238281 416.738281c-48.140625 59.527344-120.371093 95.257813-199.238281 95.257813v-195.996094c117.347656 0 174.058594 75.699219 199.238281 100.738281zm0 0\' fill=\'%23bdecfc\'/%3E%3Cpath d=\'m256 271c-49.628906 0-90-40.375-90-90v-30c0-49.625 40.371094-90 90-90 49.625 0 90 40.375 90 90v30c0 49.625-40.375 90-90 90zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m256 61v210c49.628906 0 90-40.371094 90-90v-30c0-49.628906-40.371094-90-90-90zm0 0\' fill=\'%23bdecfc\'/%3E%3C/svg%3E" alt="Avatar">\n' +
-            '    </div>\n' +
             '    <div class="container-text user col s10 pull-s2 z-depth-1">\n' +
             '        <p>' + text + '</p>\n' +
             '        <span class="time-right">' + getCurrentTime() + '</span>\n' +
@@ -226,15 +276,31 @@ function renderMessage(type, text) {
             '    </div>\n' +
             '\n' +
             '</div>'
+    } else if (type === TYPE_EMPLOYEE) {
+        html = '<div class="container row">\n' +
+            '\n' +
+            '    <div class="container-image col s2">\n' +
+            '        <img class="avatar-image" src="data:image/svg+xml,%3Csvg height=\'512pt\' viewBox=\'0 0 512 512.00019\' width=\'512pt\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'m256 511.996094c-141.484375 0-256-114.65625-256-255.996094 0-141.488281 114.496094-256 256-256 141.488281 0 255.996094 114.496094 255.996094 256 0 141.476562-114.667969 255.996094-255.996094 255.996094zm0 0\' fill=\'%2366a9df\'/%3E%3Cpath d=\'m25%0A6 0v511.996094c141.328125 0 255.996094-114.519532 255.996094-255.996094 0-141.5-114.507813-256-255.996094-256zm0 0\' fill=\'%234f84cf\'/%3E%3Cpath d=\'m256 316c-74.488281 0-145.511719 32.5625-197.417969 102.96875 103.363281 124.941406 294.6875 123.875 396.65625-2.230469-25.179687-25.046875-81.894531-100.738281-199.238281-100.738281zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m455.238281 416.738281c-48.140625 59.527344-120.371093 95.257813-199.238281 95.257813v-195.996094c117.347656 0 174.058594 75.699219 199.238281 100.738281zm0 0\' fill=\'%23bdecfc\'/%3E%3Cpath d=\'m256 271c-49.628906 0-90-40.375-90-90v-30c0-49.625 40.371094-90 90-90 49.625 0 90 40.375 90 90v30c0 49.625-40.375 90-90 90zm0 0\' fill=\'%23d6f3fe\'/%3E%3Cpath d=\'m256 61v210c49.628906 0 90-40.371094 90-90v-30c0-49.628906-40.371094-90-90-90zm0 0\' fill=\'%23bdecfc\'/%3E%3C/svg%3E" alt="Avatar">\n' +
+            '    </div>\n' +
+            '\n' +
+            '    <div class="container-text col s10 z-depth-1">\n' +
+            '        <p>' + text + '</p>\n' +
+            '        <span class="time-right">' + getCurrentTime() + '</span>\n' +
+            '    </div>\n' +
+            '\n' +
+            '</div>'
+    } else if (type === TYPE_SYSTEM) {
+        html = '<div style="text-align: center;">' + text + '</div>';
     }
 
-    // Append node to chatbot hsitory
-    var node = document.createElement('div');
-    node.innerHTML = html;
-    history.appendChild(node);
 
-    // Keep scrolled down after each new message
-    scrollBottom();
+  // Append node to chatbot hsitory
+  var node = document.createElement('div');
+  node.innerHTML = html;
+  history.appendChild(node);
+
+  // Keep scrolled down after each new message
+  scrollBottom();
 }
 
 /**
@@ -249,10 +315,27 @@ function sendRequestToSocket(_text) {
         'sender': 'user'
     };
 
-    // Activate preloading animation
-    toggleProcessing(true);
+    if (!isEmployeeConnected) {
+        // Activate preloading animation, if no employee is connected
+        toggleProcessing(true);
+    }
 
     webSocket.send(JSON.stringify(body));
+}
+
+
+/**
+ * Informs the server whether the current user is typing or not
+ * @param _isTyping
+ */
+function sendTypingStateToSocket(_isTyping) {
+    isUserTyping = _isTyping;
+    let body = {
+        'service_message': 'typing',
+        'is_typing': _isTyping,
+    }
+
+    webSocket.send(JSON.stringify(body))
 }
 
 /**
@@ -260,20 +343,20 @@ function sendRequestToSocket(_text) {
  * @returns {string}
  */
 function getCurrentTime() {
-    var time = new Date();
+  var time = new Date();
 
-    var hours = time.getHours().toString();
-    var minutes = time.getMinutes().toString();
+  var hours = time.getHours().toString();
+  var minutes = time.getMinutes().toString();
 
-    if (minutes.length === 1) {
-        minutes = '0' + minutes;
-    }
+  if (minutes.length === 1) {
+    minutes = '0' + minutes;
+  }
 
-    if (hours.length === 1) {
-        hours = '0' + hours;
-    }
+  if (hours.length === 1) {
+    hours = '0' + hours;
+  }
 
-    return hours + ':' + minutes;
+  return hours + ':' + minutes;
 }
 
 /**
@@ -282,19 +365,19 @@ function getCurrentTime() {
  * @returns {null}
  */
 function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
     }
-    return cookieValue;
+  }
+  return cookieValue;
 }
 
 /**
@@ -302,25 +385,25 @@ function getCookie(name) {
  * @param sendButton
  */
 function easterEgg(sendButton) {
-    missCounter++;
-    if (missCounter > 4) {
-        sendButton.classList.add(EASTER_EGG_CLASS);
-    }
+  missCounter++;
+  if (missCounter > 4) {
+    sendButton.classList.add(EASTER_EGG_CLASS);
+  }
 }
 
 /**
  * Shows the recommended questions.
  */
 function showQuestions() {
-    var questions = document.querySelectorAll('.question');
-    questions.forEach(item => item.style.display = 'block');
+  var questions = document.querySelectorAll('.question');
+  questions.forEach(item => item.style.display = 'flex');
 }
 
 /**
  * Scrolls the chatbot history to the bottom.
  */
 function scrollBottom() {
-    root.scrollTop = root.scrollHeight;
+  root.scrollTop = root.scrollHeight;
 }
 
 /**
@@ -328,13 +411,13 @@ function scrollBottom() {
  * @param assumedAnswers
  */
 function renderAssumedAnswers(assumedAnswers) {
-    var questionContainers = document.querySelectorAll('.question>span');
-    for (var i = 0; i < questionContainers.length; i++) {
-        questionContainers[i].innerHTML = assumedAnswers[i].question_text;
-        questionContainers[i].setAttribute('data-question', assumedAnswers[i].question_text);
-        questionContainers[i].parentElement.setAttribute('data-question', assumedAnswers[i].question_text);
-    }
-    showQuestions();
+  var questionContainers = document.querySelectorAll('.question>span');
+  for (var i = 0; i < questionContainers.length; i++) {
+    questionContainers[i].innerHTML = assumedAnswers[i].question_text;
+    questionContainers[i].setAttribute('data-question', assumedAnswers[i].question_text);
+    questionContainers[i].parentElement.setAttribute('data-question', assumedAnswers[i].question_text);
+  }
+  showQuestions();
 }
 
 /**
@@ -342,25 +425,13 @@ function renderAssumedAnswers(assumedAnswers) {
  * @param on
  */
 function toggleProcessing(on) {
-    if (on) {
-        inputField.style.display = 'none';
-        inputButton.style.display = 'none';
-        progressBar.style.display = 'block';
-    } else {
-        progressBar.style.display = 'none';
-        inputField.style.display = 'block';
-        inputButton.style.display = 'block';
-    }
-}
-
-/**
- * Toggles the Wobble animation, true=on, false=off
- * @param on
- */
-function toggleWobble(on) {
-    if (on) {
-        overlay.classList.add(WOBBLE_CLASS);
-    } else {
-        overlay.classList.remove(WOBBLE_CLASS)
-    }
+  if (on) {
+    inputField.style.display = 'none';
+    inputButton.style.display = 'none';
+    progressBar.style.display = 'block';
+  } else {
+    progressBar.style.display = 'none';
+    inputField.style.display = 'block';
+    inputButton.style.display = 'block';
+  }
 }

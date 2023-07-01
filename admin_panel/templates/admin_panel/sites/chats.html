@@ -1,0 +1,106 @@
+{% extends "admin_panel/layout.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="chats-row">
+
+
+        <div class="live-chats">
+            <h2>Live-Chats</h2>
+
+            <div id="auto-connect-toggle-container" class="switch">
+                <label>
+                    <input id="auto-connect-toggle" type="checkbox">
+                    <span class="lever"></span>
+                    Automatisch mit neuen Chats verbinden
+                </label>
+            </div>
+
+            <div id="session-list">
+                Sitzungen werden geladen...
+            </div>
+        </div>
+        <div class="old-chats">
+            <h2>Chat-Verlauf</h2>
+
+            <table class="highlight logging-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Anzahl Nachrichten</th>
+                    <th>Mitarbeiter</th>
+                    <th>Erstellungsdatum</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for chat in chats.object_list %}
+                    <tr>
+                        <td>
+                            {{ chat.id }}
+                        </td>
+                        <td>
+                            {{ chat.chatmessage_set.all.count }} Nachrichten
+                        </td>
+                        <td>
+                            {% if chat.user.id is not None %}
+                                {{ chat.user.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ chat.created_at }}
+                        </td>
+                        <td>
+                            <a href="{% url "admin_panel:admin_chat_details" chat_id=chat.id %}"
+                               class="waves-effect waves-light btn-small"
+                               title="Bearbeiten">
+                                <i class="material-icons">forum</i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if chats.paginator.num_pages > 1 %}
+
+                <ul class="pagination" style="text-align: center">
+
+                    {% if chats.has_previous %}
+                        <li class="waves-effect"><a
+                                href="?page={{ chats.previous_page_number }}"><i
+                                class="material-icons">chevron_left</i></a></li>
+                    {% else %}
+                        <li class="disabled"><a
+                                href="#"><i
+                                class="material-icons">chevron_left</i></a></li>
+                    {% endif %}
+
+                    {% for page in chats.paginator.page_range %}
+                        <li class="waves-effect {% if page == chats.number %}active{% endif %}"><a
+                                href="?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+
+                    {% if chats.has_next %}
+                        <li class="waves-effect"><a
+                                href="?page={{ chats.next_page_number }}"><i
+                                class="material-icons">chevron_right</i></a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><a
+                                href="#"><i
+                                class="material-icons">chevron_right</i></a></li>
+                    {% endif %}
+
+                </ul>
+
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'admin_panel/js/chat_session_overview.js' %}"></script>
+{% endblock %}

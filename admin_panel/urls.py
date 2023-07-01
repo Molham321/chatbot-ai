@@ -29,6 +29,10 @@ urlpatterns = [
     path('logging/<log_id>/', views.logging_detail_view, name='admin_logging_detail'),
     path('questions/', views.questions_view, name='admin_questions'),
 
+    path('chats/', views.chats_view, name='admin_chat'),
+    path('chats/<chat_id>/', views.chat_detail_view, name='admin_chat_details'),
+    path('chat/<str:session_token>/', views.chat_view, name='admin_chat_room'),
+
     path('questions/edit/<question_id>/', views.edit_questions_view, name='admin_questions_edit'),
     path('questions/edit/<question_id>/save/', views.save_questions_view, name='admin_questions_save'),
     path('questions/create/', views.create_questions_view, name='admin_questions_create'),

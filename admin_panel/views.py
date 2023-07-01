@@ -11,6 +11,7 @@ from xhtml2pdf import pisa
 from admin_panel.models import AdminSettings
 from chatbot_logging.models import ChatbotConversationLog, CalculatedAnswer
 from chatbot_logic.models import Question, Answer, Context
+from chatbot_logic.classes.ChatSessions import ChatSessions
 
 
 def index_view(request):
@@ -151,6 +152,10 @@ def save_settings_view(request):
                 settings.similarity_factor = data["similarity_factor"]
                 settings.context_factor = data["context_factor"]
                 settings.matching_method = data["matching_method"]
+                settings.mail_timeout_in_seconds = data["mail_timeout"]
+                settings.similarity_mail_threshold = data["similarity_threshold"]
+                settings.number_of_quality_test_answers = data["quality_test_answers"]
+
                 settings.save()
                 return_data['toast_html'] = 'Einstellungen gespeichert'
             else:
@@ -231,8 +236,10 @@ def create_questions_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        message = request.GET.get('message', 'Neue Frage')
+
         question = Question()
-        question.question_text = 'Neue Frage'
+        question.question_text = message
         question.save()
         return redirect('admin_panel:admin_questions_edit', question_id=question.id)
     else:
@@ -288,8 +295,10 @@ def create_answers_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        message = request.GET.get('message', 'Neue Frage')
+
         answer = Answer()
-        answer.answer_text = 'Neue Antwort'
+        answer.answer_text = message
         answer.save()
         return redirect('admin_panel:admin_answers_edit', answer_id=answer.id)
     else:
@@ -443,5 +452,54 @@ def log_download_view(request):
 
         pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), response)
         return HttpResponse(response.getvalue(), content_type='application/pdf')
+    else:
+        return redirect('admin_panel:admin_login')
+
+
+def chats_view(request):
+    """
+    Renders the Chat Overview template and returns it as HttpResponse.
+    :param request: Passed django request object.
+    :return: Returns an HttpResponse.
+    """
+    if request.user.is_authenticated:
+        page = request.GET.get('page', 1)
+
+        chat_sessions = ChatSessions()
+        chats = chat_sessions.get_chats(page=page)
+
+        return render(request, 'admin_panel/sites/chats.html',
+                      {
+                          'chats': chats
+                      })
+    else:
+        return redirect('admin_panel:admin_login')
+
+
+def chat_detail_view(request, chat_id):
+    """
+    Renders the Chat Detail template and returns it as HttpResponse.
+    :param request: Passed django request object.
+    :return: Returns an HttpResponse.
+    """
+    if request.user.is_authenticated:
+        chat_sessions = ChatSessions()
+        chat = chat_sessions.get_chat(chat_id=chat_id)
+
+        if request.method == 'POST' and "delete" in request.POST:
+            chat_sessions.delete_chat(chat_id=chat_id)
+            return redirect('admin_panel:admin_chat')
+
+        return render(request, 'admin_panel/sites/chat_details.html',
+                      {
+                          'chat': chat
+                      })
+    else:
+        return redirect('admin_panel:admin_login')
+
+
+def chat_view(request, session_token):
+    if request.user.is_authenticated:
+        return render(request, 'admin_panel/sites/chat.html', {'session_id': session_token})
     else:
         return redirect('admin_panel:admin_login')
