@@ -50,6 +50,41 @@
                                 <label for="user-left">Benutzer hat verlassen</label>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="mail-request-text" id="mail-request-text" class="materialize-textarea"
+                                  data-length="255">{{ settings.mail_request_text }}</textarea>
+                                <label for="mail-request-tex">Anfrage zum Versenden einer Nachricht</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="mail-sent-text" id="mail-sent-text" class="materialize-textarea"
+                                  data-length="255">{{ settings.mail_sent_text }}</textarea>
+                                <label for="mail-sent-text">Bestätigung der versendeten Nachricht</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="mail-input-text" id="mail-input-text" class="materialize-textarea"
+                                  data-length="255">{{ settings.mail_input_text }}</textarea>
+                                <label for="mail-input-text">Eingabeanfrage für E-Mail</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="mail-invalid-input-text" id="mail-invalid-input-text" class="materialize-textarea"
+                                  data-length="255">{{ settings.mail_invalid_input_text }}</textarea>
+                                <label for="mail-invalid-input-text">Information über ungültige E-Mail Adresse</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <textarea name="mail-cancel-text" id="mail-cancel-text" class="materialize-textarea"
+                                  data-length="255">{{ settings.mail_cancel_text }}</textarea>
+                                <label for="mail-cancel-text">Information über abgebrochenen E-Mail Versand</label>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

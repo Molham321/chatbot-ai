@@ -17,7 +17,8 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
     <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/material-icons.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/materialize.min.css" %}" media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/materialize.min.css" %}"
+          media="screen,projection"/>
     <link rel="stylesheet" type="text/css" href="{% static "chatbot_logic/css/style.css" %}">
 
     <title>Chatbot</title>
@@ -25,7 +26,9 @@
 
 <body class="disable-scrollbars">
 
-<div id="chat">
+<div id="chat" data-mail-timeout="{{ settings.mail_timeout_in_seconds }}"
+     data-similarity-mail-threshold="{{ settings.similarity_mail_threshold }}"
+     data-number-quality-test-answers="{{ settings.number_of_quality_test_answers }}">
     {% include 'chatbot_logic/chatbot_content.html' with settings=settings %}
 </div>
 

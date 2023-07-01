@@ -17,26 +17,41 @@
 
 <div class="input-message">
 
-    <div class="questions-container">
-            <div class="question z-depth-1 cursor" style="display: none">
+    <div class="questions-container" id="suggestions">
+            <div class="question z-depth-1 cursor">
                 <span class="faq-text"></span>
             </div>
 
-            <div class="question z-depth-1 cursor" style="display: none">
+            <div class="question z-depth-1 cursor">
                 <span class="faq-text"></span>
             </div>
 
-            <div class="question z-depth-1 cursor" style="display: none">
+            <div class="question z-depth-1 cursor">
                 <span class="faq-text"></span>
             </div>
     </div>
 
     <div class="row flex no-margin">
 
-        <div class="col s9" id="input-field">
+        <div class="col s2 valign-wrapper right-align" id="input-button">
+            <div class="row no-margin">
+                <a class="btn-small waves-effect waves-light fhe-color hidden" title="Frage senden"
+                   id="mail-button">
+                    <i class="material-icons">mail</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col s8" id="input-field" style="padding: 0 3rem">
             <div class="input-field">
                 <textarea id="actual-message" class="materialize-textarea"></textarea>
                 <label for="actual-message">Frage</label>
+            </div>
+        </div>
+
+        <div class="col s8" id="progress-bar" style="display: none">
+            <div class="progress">
+                <div class="indeterminate"></div>
             </div>
         </div>
 
@@ -46,12 +61,6 @@
                    id="send-button">
                     <i class="material-icons">send</i>
                 </a>
-            </div>
-        </div>
-
-        <div class="col s12" id="progress-bar" style="display: none">
-            <div class="progress">
-                <div class="indeterminate"></div>
             </div>
         </div>
 

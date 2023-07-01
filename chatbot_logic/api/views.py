@@ -1,4 +1,5 @@
 import json
+import smtplib
 
 from django.template import loader
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -15,6 +16,13 @@ from chatbot_logic.api.serializers import AnswerSetSerializer, ChatSessionSerial
 from chatbot_logic.controllers.MatchController import MatchController
 
 from chatbot_logic.classes.ChatSessions import ChatSessions
+
+from chatbot_logic.classes.EmailService import EmailService
+
+from django.conf import settings
+
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 class ChatbotHTML(APIView):
@@ -42,7 +50,6 @@ class AnswerUserHTML(APIView):
         self.options = options
 
     def get(self, request):
-
         post_object = request.POST.copy()
         text = post_object.get('text')
         template = loader.get_template('chatbot_logic/chatbot_answer_user.html')
@@ -59,7 +66,6 @@ def api_get_answer(request):
         question = data['question']
 
         if question is not None:
-
             match_controller = MatchController()
 
             answer = match_controller.match_against_db(question)
@@ -102,3 +108,21 @@ def api_instantiate_session(request):
     serializer = ChatSessionSerializer(chat_session)
 
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def api_send_email(request):
+    data = json.loads(request.body)
+    question = data['question']
+    reply_to = data['reply_to']
+    result = EmailService().send_email(question, reply_to)
+    if result:
+        return Response({
+            "success": "mail sent",
+            "question": question,
+            "settings": settings.MAIL_SETTINGS
+        })
+
+    return Response('Error ' + str(status.HTTP_500_INTERNAL_SERVER_ERROR))

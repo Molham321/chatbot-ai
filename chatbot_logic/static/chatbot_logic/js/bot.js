@@ -68,12 +68,16 @@ const LEFT_ARROW_ICON = 'chevron_left';
  */
 const ERROR_MESSAGE = 'Entschuldigung, es liegt zur Zeit ein technisches Problem vor. Bitte versuch es später nochmal.';
 
+const chat = document.getElementById("chat");
 
 /**
  * Defines how long to wait until not typing any key counts as "not typing" in milliseconds
  * @type {number}
  */
 const typingDelay = 5000;
+const emailTimeout = parseInt(chat.getAttribute("data-mail-timeout"));
+const similarityThreshold = parseFloat(chat.getAttribute("data-similarity-mail-threshold"));
+const numberQualityTestAnswers = parseInt(chat.getAttribute("data-number-quality-test-answers"));
 
 // Fetch csrf Token from cookie.
 const csrftoken = getCookie('csrftoken');
@@ -85,13 +89,15 @@ var missCounter = 0;
 var firstQuestion = true;
 
 var isEmployeeConnected = false;
+var mailRequested = false;
 
 // Get global selectors which are used in different scopes
 var root = document.querySelector('html');
 var progressBar = document.getElementById('progress-bar');
 var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
-var questionsContainer = document.querySelector('.questions-container');
+var sendButton = document.getElementById('send-button');
+var suggestions = document.getElementById('suggestions');
 
 
 var typingIndicator = document.getElementById('typing-indicator');
@@ -100,25 +106,30 @@ var isUserTyping = false
 
 let webSocket;
 
+var mailButton = document.getElementById('mail-button');
+
+var emailRequestTimeout = null;
+
+var lastAnswers = [];
+
 document.addEventListener("DOMContentLoaded", function (event) {
 
-  var sendButton = document.getElementById('send-button');
-  var messageInput = document.getElementById('actual-message');
-  var questions = document.querySelectorAll('.question');
+    var messageInput = document.getElementById('actual-message');
+    var questions = document.querySelectorAll('.question');
 
-  // Attach click handler for the question submit button
-  function submitHandler() {
-    var text = messageInput.value;
+    // Attach click handler for the question submit button
+    function submitHandler() {
+        var text = messageInput.value;
 
-    if (text.length) {
-        // Reset miss counter (easter egg)
-        missCounter = 0;
+        if (text.length) {
+            // Reset miss counter (easter egg)
+            missCounter = 0;
 
-        // Empty Input value
-        messageInput.value = '';
+            // Empty Input value
+            messageInput.value = '';
 
-        // Render the user message
-        renderMessage(TYPE_USER, text);
+            // Render the user message
+            renderMessage(TYPE_USER, text);
 
             // Fetch question and display it
             sendRequestToSocket(text);
@@ -130,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     messageInput.addEventListener('input', function () {
         clearTimeout(typingTimer);
+
         typingTimer = setTimeout(function () {
             sendTypingStateToSocket(false);
         }, typingDelay);
@@ -137,28 +149,41 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if (!isUserTyping) {
             sendTypingStateToSocket(true);
         }
+
+        if (!isEmployeeConnected && !mailRequested) {
+            if (emailRequestTimeout)
+                clearTimeout(emailRequestTimeout)
+
+            emailRequestTimeout = setTimeout(function () {
+                sendMailRequestToSocket();
+            }, emailTimeout);
+        }
     });
 
     sendButton.addEventListener('click', submitHandler);
-  // Attach keypress handler for the enter key
-  messageInput.addEventListener('keypress', function (event) {
+    mailButton.addEventListener('click', function () {
+        sendMailRequestToSocket();
+    })
+
+    // Attach keypress handler for the enter key
+    messageInput.addEventListener('keypress', function (event) {
         if (event.code === 'Enter' && !event.shiftKey) {
-      submitHandler();
-    }
-  });
+            submitHandler();
+        }
+    });
 
-  // Attach click handler for the recommended questions
-  questions.forEach(item => {
-    item.addEventListener('click', function (event) {
+    // Attach click handler for the recommended questions
+    questions.forEach(item => {
+        item.addEventListener('click', function (event) {
 
-      // Get the question value from data attribute
-      var question = event.target.getAttribute('data-question');
+            // Get the question value from data attribute
+            var question = event.target.getAttribute('data-question');
 
-      // Only proceed in case question is defined
-      if (question) {
+            // Only proceed in case question is defined
+            if (question) {
 
-        // Render the user message
-        renderMessage(TYPE_USER, question);
+                // Render the user message
+                renderMessage(TYPE_USER, question);
 
                 // Fetch question and display it
                 sendRequestToSocket(question);
@@ -195,16 +220,21 @@ function instantiateSession() {
 function onWebSocketMessage(event) {
     const data = JSON.parse(event.data);
 
+    if (emailRequestTimeout)
+        clearTimeout(emailRequestTimeout)
+
     let sender = TYPE_USER;
     let type = data.type || 'reply';
 
-    if (data.sender === 'bot')
+    if (data.sender === 'bot') {
         sender = TYPE_BOT;
-    else if (data.sender === 'system')
+        if (!firstQuestion)
+            suggestions.style.display = "flex"
+    } else if (data.sender === 'system')
         sender = TYPE_SYSTEM
     else if (data.sender === 'employee') {
-            sender = TYPE_EMPLOYEE
-            questionsContainer.style.display = "none"
+        sender = TYPE_EMPLOYEE
+        suggestions.style.display = "none"
     }
 
     if (type === 'reply') {
@@ -213,24 +243,72 @@ function onWebSocketMessage(event) {
 
         if (data.answer) {
             renderAssumedAnswers(data.answer.assumed_answers);
+
+            if (sender === TYPE_BOT && !mailRequested) {
+                lastAnswers.push(data.answer.answer);
+                validateLastAnswers();
+            }
+        } else
+            suggestions.style.display = "none";
+
+        if (typeof data.mail_state !== 'undefined') {
+            if (data.mail_state == null) {
+                mailRequested = false;
+                mailButton.classList.remove("hidden");
+            } else {
+                mailButton.classList.add("hidden");
+            }
         }
 
         if (firstQuestion) {
             firstQuestion = false;
+        } else if (data.sender === 'bot' && !mailRequested) {
+            mailButton.classList.remove('hidden');
+
+            emailRequestTimeout = setTimeout(function () {
+                sendMailRequestToSocket();
+            }, emailTimeout);
         }
     } else if (type === 'loading') {
         toggleProcessing(true);
     } else if (type === 'employee_joined') {
         isEmployeeConnected = true
-        questionsContainer.style.display = "none"
+        suggestions.style.display = "none"
         renderMessage(sender, data.message);
         toggleProcessing(false);
+        lastAnswers = [];
     } else if (type === 'employee_disconnected') {
         isEmployeeConnected = false
         renderMessage(sender, data.message);
     } else if (type === 'typing_state_changed') {
         let typingState = Boolean(data.is_typing);
         setTypingState(typingState)
+    }
+}
+
+function validateLastAnswers() {
+    const lastNumberedAnswers = lastAnswers.slice(-numberQualityTestAnswers);
+
+    const average = lastNumberedAnswers.map(function (item) {
+        return item.answer_rating;
+    }).reduce(function (value, current) {
+        return value + current
+    }, 0) / lastNumberedAnswers.length;
+
+    let sameId = true;
+    let lastAnswer = null;
+
+    for (const answer of lastNumberedAnswers) {
+        if(lastAnswer == null)
+            lastAnswer = answer.answer_id;
+        else if(lastAnswer !== answer.answer_id) {
+            sameId = false;
+            break;
+        }
+    }
+
+    if(lastNumberedAnswers.length >= numberQualityTestAnswers && (average <= similarityThreshold || sameId)) {
+        sendMailRequestToSocket();
     }
 }
 
@@ -253,8 +331,8 @@ function setTypingState(isOtherUserTyping) {
  * @param text
  */
 function renderMessage(type, text) {
-  var html = '';
-  var history = document.getElementById('chat-history');
+    var html = '';
+    var history = document.getElementById('chat-history');
 
     if (type === TYPE_USER) {
         html = '<div class="container bot row">\n' +
@@ -294,13 +372,13 @@ function renderMessage(type, text) {
     }
 
 
-  // Append node to chatbot hsitory
-  var node = document.createElement('div');
-  node.innerHTML = html;
-  history.appendChild(node);
+    // Append node to chatbot hsitory
+    var node = document.createElement('div');
+    node.innerHTML = html;
+    history.appendChild(node);
 
-  // Keep scrolled down after each new message
-  scrollBottom();
+    // Keep scrolled down after each new message
+    scrollBottom();
 }
 
 /**
@@ -338,25 +416,36 @@ function sendTypingStateToSocket(_isTyping) {
     webSocket.send(JSON.stringify(body))
 }
 
+function sendMailRequestToSocket() {
+    mailRequested = true;
+    mailButton.classList.add("hidden")
+
+    let body = {
+        'service_message': 'send_mail'
+    }
+
+    webSocket.send(JSON.stringify(body))
+}
+
 /**
  * Returns the current Time in format HH:mm
  * @returns {string}
  */
 function getCurrentTime() {
-  var time = new Date();
+    var time = new Date();
 
-  var hours = time.getHours().toString();
-  var minutes = time.getMinutes().toString();
+    var hours = time.getHours().toString();
+    var minutes = time.getMinutes().toString();
 
-  if (minutes.length === 1) {
-    minutes = '0' + minutes;
-  }
+    if (minutes.length === 1) {
+        minutes = '0' + minutes;
+    }
 
-  if (hours.length === 1) {
-    hours = '0' + hours;
-  }
+    if (hours.length === 1) {
+        hours = '0' + hours;
+    }
 
-  return hours + ':' + minutes;
+    return hours + ':' + minutes;
 }
 
 /**
@@ -365,19 +454,19 @@ function getCurrentTime() {
  * @returns {null}
  */
 function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      // Does this cookie string begin with the name we want?
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
-  }
-  return cookieValue;
+    return cookieValue;
 }
 
 /**
@@ -385,25 +474,17 @@ function getCookie(name) {
  * @param sendButton
  */
 function easterEgg(sendButton) {
-  missCounter++;
-  if (missCounter > 4) {
-    sendButton.classList.add(EASTER_EGG_CLASS);
-  }
-}
-
-/**
- * Shows the recommended questions.
- */
-function showQuestions() {
-  var questions = document.querySelectorAll('.question');
-  questions.forEach(item => item.style.display = 'flex');
+    missCounter++;
+    if (missCounter > 4) {
+        sendButton.classList.add(EASTER_EGG_CLASS);
+    }
 }
 
 /**
  * Scrolls the chatbot history to the bottom.
  */
 function scrollBottom() {
-  root.scrollTop = root.scrollHeight;
+    root.scrollTop = root.scrollHeight;
 }
 
 /**
@@ -411,13 +492,18 @@ function scrollBottom() {
  * @param assumedAnswers
  */
 function renderAssumedAnswers(assumedAnswers) {
-  var questionContainers = document.querySelectorAll('.question>span');
-  for (var i = 0; i < questionContainers.length; i++) {
-    questionContainers[i].innerHTML = assumedAnswers[i].question_text;
-    questionContainers[i].setAttribute('data-question', assumedAnswers[i].question_text);
-    questionContainers[i].parentElement.setAttribute('data-question', assumedAnswers[i].question_text);
-  }
-  showQuestions();
+    var questionContainers = document.querySelectorAll('.question>span');
+
+    for (var i = 0; i < 3; i++) {
+        if (i >= assumedAnswers.length) {
+            questionContainers[i].parentElement.style.display = 'none';
+        } else {
+            questionContainers[i].parentElement.style.display = 'flex';
+            questionContainers[i].innerHTML = assumedAnswers[i].question_text;
+            questionContainers[i].setAttribute('data-question', assumedAnswers[i].question_text);
+            questionContainers[i].parentElement.setAttribute('data-question', assumedAnswers[i].question_text);
+        }
+    }
 }
 
 /**
@@ -425,13 +511,21 @@ function renderAssumedAnswers(assumedAnswers) {
  * @param on
  */
 function toggleProcessing(on) {
-  if (on) {
-    inputField.style.display = 'none';
-    inputButton.style.display = 'none';
-    progressBar.style.display = 'block';
-  } else {
-    progressBar.style.display = 'none';
-    inputField.style.display = 'block';
-    inputButton.style.display = 'block';
-  }
+    if (on) {
+        inputField.style.display = 'none';
+        inputButton.style.display = 'none';
+        sendButton.style.display = 'none';
+        mailButton.classList.add("hidden");
+        progressBar.style.display = 'block';
+        suggestions.style.display = "none"
+    } else {
+        progressBar.style.display = 'none';
+        inputField.style.display = 'block';
+        inputButton.style.display = 'block';
+        sendButton.style.display = 'inline-block';
+
+        if (!firstQuestion && !isEmployeeConnected) {
+            suggestions.style.display = "flex"
+        }
+    }
 }
