@@ -32,7 +32,6 @@ const TYPE_EMPLOYEE = 'employee';
 const TYPE_SYSTEM = 'system';
 
 
-
 /**
  * Special secret easer egg class
  * @type {string}
@@ -70,6 +69,12 @@ const LEFT_ARROW_ICON = 'chevron_left';
 const ERROR_MESSAGE = 'Entschuldigung, es liegt zur Zeit ein technisches Problem vor. Bitte versuch es später nochmal.';
 
 
+/**
+ * Defines how long to wait until not typing any key counts as "not typing" in milliseconds
+ * @type {number}
+ */
+const typingDelay = 5000;
+
 // Fetch csrf Token from cookie.
 const csrftoken = getCookie('csrftoken');
 
@@ -87,6 +92,11 @@ var progressBar = document.getElementById('progress-bar');
 var inputField = document.getElementById('input-field');
 var inputButton = document.getElementById('input-button');
 var questionsContainer = document.querySelector('.questions-container');
+
+
+var typingIndicator = document.getElementById('typing-indicator');
+var typingTimer;
+var isUserTyping = false
 
 let webSocket;
 
@@ -110,10 +120,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
         // Render the user message
         renderMessage(TYPE_USER, text);
 
-        // Fetch question and display it
-        sendRequestToSocket(text);
+            // Fetch question and display it
+            sendRequestToSocket(text);
+        } else {
+            // Check for easter egg
+            easterEgg(sendButton);
+        }
     }
-  }
+
+    messageInput.addEventListener('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function () {
+            sendTypingStateToSocket(false);
+        }, typingDelay);
+
+        if (!isUserTyping) {
+            sendTypingStateToSocket(true);
+        }
+    });
 
     sendButton.addEventListener('click', submitHandler);
   // Attach keypress handler for the enter key
@@ -187,7 +211,9 @@ function onWebSocketMessage(event) {
         renderMessage(sender, data.message);
         toggleProcessing(false);
 
-        renderAssumedAnswers(data.answer.assumed_answers);
+        if (data.answer) {
+            renderAssumedAnswers(data.answer.assumed_answers);
+        }
 
         if (firstQuestion) {
             firstQuestion = false;
@@ -198,9 +224,26 @@ function onWebSocketMessage(event) {
         isEmployeeConnected = true
         questionsContainer.style.display = "none"
         renderMessage(sender, data.message);
+        toggleProcessing(false);
     } else if (type === 'employee_disconnected') {
         isEmployeeConnected = false
         renderMessage(sender, data.message);
+    } else if (type === 'typing_state_changed') {
+        let typingState = Boolean(data.is_typing);
+        setTypingState(typingState)
+    }
+}
+
+
+/**
+ * Toggles the visibility of the typing indicator
+ * @param isOtherUserTyping true, if the indicator should be visible otherwise false
+ */
+function setTypingState(isOtherUserTyping) {
+    if (isOtherUserTyping) {
+        typingIndicator.classList.remove('hidden');
+    } else {
+        typingIndicator.classList.add('hidden');
     }
 }
 
@@ -278,6 +321,21 @@ function sendRequestToSocket(_text) {
     }
 
     webSocket.send(JSON.stringify(body));
+}
+
+
+/**
+ * Informs the server whether the current user is typing or not
+ * @param _isTyping
+ */
+function sendTypingStateToSocket(_isTyping) {
+    isUserTyping = _isTyping;
+    let body = {
+        'service_message': 'typing',
+        'is_typing': _isTyping,
+    }
+
+    webSocket.send(JSON.stringify(body))
 }
 
 /**

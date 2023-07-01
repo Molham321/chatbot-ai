@@ -11,6 +11,7 @@ from xhtml2pdf import pisa
 from admin_panel.models import AdminSettings
 from chatbot_logging.models import ChatbotConversationLog, CalculatedAnswer
 from chatbot_logic.models import Question, Answer, Context
+from chatbot_logic.classes.ChatSessions import ChatSessions
 
 
 def index_view(request):
@@ -235,8 +236,10 @@ def create_questions_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        message = request.GET.get('message', 'Neue Frage')
+
         question = Question()
-        question.question_text = 'Neue Frage'
+        question.question_text = message
         question.save()
         return redirect('admin_panel:admin_questions_edit', question_id=question.id)
     else:
@@ -292,8 +295,10 @@ def create_answers_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        message = request.GET.get('message', 'Neue Frage')
+
         answer = Answer()
-        answer.answer_text = 'Neue Antwort'
+        answer.answer_text = message
         answer.save()
         return redirect('admin_panel:admin_answers_edit', answer_id=answer.id)
     else:
@@ -458,10 +463,40 @@ def chats_view(request):
     :return: Returns an HttpResponse.
     """
     if request.user.is_authenticated:
+        page = request.GET.get('page', 1)
+
+        chat_sessions = ChatSessions()
+        chats = chat_sessions.get_chats(page=page)
+
         return render(request, 'admin_panel/sites/chats.html',
-                      {})
+                      {
+                          'chats': chats
+                      })
     else:
         return redirect('admin_panel:admin_login')
+
+
+def chat_detail_view(request, chat_id):
+    """
+    Renders the Chat Detail template and returns it as HttpResponse.
+    :param request: Passed django request object.
+    :return: Returns an HttpResponse.
+    """
+    if request.user.is_authenticated:
+        chat_sessions = ChatSessions()
+        chat = chat_sessions.get_chat(chat_id=chat_id)
+
+        if request.method == 'POST' and "delete" in request.POST:
+            chat_sessions.delete_chat(chat_id=chat_id)
+            return redirect('admin_panel:admin_chat')
+
+        return render(request, 'admin_panel/sites/chat_details.html',
+                      {
+                          'chat': chat
+                      })
+    else:
+        return redirect('admin_panel:admin_login')
+
 
 def chat_view(request, session_token):
     if request.user.is_authenticated:

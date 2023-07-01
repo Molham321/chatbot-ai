@@ -1,3 +1,7 @@
+from django.core.paginator import Paginator
+from fhe_chatbot.classes.Singleton import Singleton
+from chatbot_logic.models import ChatSession, Chat, ChatMessage
+from channels.db import database_sync_to_async
 import uuid
 
 from channels.db import database_sync_to_async
@@ -73,6 +77,10 @@ class ChatSessions(metaclass=Singleton):
         except Chat.DoesNotExist:
             return None
 
+    def delete_chat(self, chat_id):
+        Chat.objects.filter(id=chat_id).delete()
+        ChatMessage.objects.filter(chat_id=chat_id).delete()
+
     @database_sync_to_async
     def store_message(self, chat, message, from_guest=True, user=None):
         chat_message = ChatMessage()
@@ -83,6 +91,14 @@ class ChatSessions(metaclass=Singleton):
         chat_message.from_guest = from_guest
 
         chat_message.save()
+
+    def get_chats(self, limit=10, page=1):
+        query = Chat.objects.order_by('-created_at').all()
+
+        return Paginator(query, limit).page(page)
+
+    def get_chat(self, chat_id):
+        return Chat.objects.get(id=chat_id)
 
     @database_sync_to_async
     def store_chat(self, chat):

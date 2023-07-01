@@ -234,3 +234,7 @@ p.matching-radio > label {
 .chats-row .old-chats {
     flex: 2;
 }
+
+#auto-connect-toggle-container {
+    margin-bottom: 25px;
+}
