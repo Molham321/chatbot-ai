@@ -4,8 +4,9 @@ body {
 }
 
 .flex {
-  display: flex !important;
-  flex-wrap: wrap !important;
+    display: flex !important;
+    align-items: center;
+    margin: 0 -85px 0 22px;
 }
 
 .container {
@@ -14,13 +15,14 @@ body {
     font-size: 10pt;
     animation: slideInLeft;
     animation-duration: 1.5s;
+    display: flex;
+    align-items: center;
 }
 
 .container.bot {
     animation: slideInRight;
     animation-duration: 1.5s;
 }
-
 
 .wobble {
     animation: headShake ease-in-out;
@@ -56,10 +58,7 @@ body {
 /* Style images */
 
 .avatar-image {
-    float: left;
     max-width: 60px;
-    width: 100%;
-    border-radius: 50%;
 }
 
 
@@ -76,7 +75,7 @@ body {
 .time-right {
     float: right;
     font-size: 10pt;
-    color: #FFFFFF !important;
+    color: black !important;
     padding: 0 10px 10px 0;
 }
 
@@ -127,8 +126,8 @@ body {
 
 .container-text {
     border-radius: 5px 15px 15px 15px;
-    color: white;
-    background-color: rgba(51, 77, 102, 0.9);
+    color: black;
+    background-color: #fff;
     padding: 10px;
 }
 
@@ -140,7 +139,7 @@ body {
 
 .container-text.user {
     border-radius: 15px 5px 15px 15px;
-    background-color: rgba(204, 0, 82, 0.9);
+    background-color: #fff;
     padding: 10px;
 }
 
@@ -199,19 +198,40 @@ body {
 }
 
 .questions-container {
-    padding: 7%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 126px 0 93px;
+    width: 75%
+}
+
+.container.bot.row {
+    margin: 0 0 0 400px;
+}
+
+.container.row {
+    margin: 0 0 0 70px;
 }
 
 .question {
-    background-color: rgba(204, 0, 82, 1);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 10px;
+    background-color: #FCFFFB;
+    margin: 5px;
     border-radius: 5px;
+    width: 200px;
+    height: 50px;
+    flex: 1;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.faq-text {
+    color: black;
 }
 
 .questions-header {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .cursor {
