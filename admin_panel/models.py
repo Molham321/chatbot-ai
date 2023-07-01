@@ -17,10 +17,16 @@ class AdminSettings(models.Model):
         noanswer_text = models.CharField(max_length=255)
         employee_joined_text = models.CharField(max_length=255)
         employee_left_text = models.CharField(max_length=255)
-        user_left_text=models.CharField(max_length=255)
+        user_left_text = models.CharField(max_length=255)
+
         mail_timeout_in_seconds = models.IntegerField(default=600)
         similarity_mail_threshold = models.FloatField(default=0.2)
         number_of_quality_test_answers = models.IntegerField(default=5)
+        mail_request_text = models.CharField(max_length=255)
+        mail_input_text = models.CharField(max_length=255)
+        mail_invalid_input_text = models.CharField(max_length=255)
+        mail_cancel_text = models.CharField(max_length=255)
+        mail_sent_text = models.CharField(max_length=255)
 
         def save(self, *args, **kwargs):
             """
