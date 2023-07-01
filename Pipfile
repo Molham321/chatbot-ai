@@ -17,6 +17,7 @@ daphne = "*"
 django = "*"
 channels = "==3.0.5"
 load-dotenv = "*"
+mysqlclient = "*"
 
 [requires]
 python_version = "3.8.5"

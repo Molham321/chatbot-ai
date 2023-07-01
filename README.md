@@ -13,7 +13,7 @@ This repository is used for the FHE-AI Chatbot implementation.
     * [pipenv](https://pypi.org/project/pipenv/)
     * `pipenv run` before each command to run commands within the virtual enviroment
 * Working with Django REST Framework
-
+* (for production): MySQL Server 8.0 or higher
 
 ## Installing / Usage
 * Open Project folder and run `pipenv install` at a console
@@ -24,6 +24,14 @@ This repository is used for the FHE-AI Chatbot implementation.
     * run `python -m spacy download de_core_news_md`
     * Note that you might have to prepend `pipenv run` to run these commands inside our virtual environment in which the dependencies are installed.
 
+* Configure .env
+    * Rename `.env.development` or `.env.production` to `.env` 
+    * Additional configuration for production:
+      * you need a mysql database with a `my.cnf` (See [here](https://docs.djangoproject.com/en/4.2/ref/databases/#connecting-to-the-database))
+        * Perform migration: `python manage.py migrate`
+        * Create superuser (admin): `python manage.py createsuperuser`
+      * you need to copy the static assets into the configured folder (`STATICFILES_DIR`)
+        * use command: `python manage.py collectstatic`
 
 ## Authors
 * **Abdul Samet Ankaoglu**
@@ -33,6 +41,12 @@ This repository is used for the FHE-AI Chatbot implementation.
 * **Christian Ortlepp**
 * **Lukas Bachmann**
 * **Sebastian Heine**
+
+## Expanded by
+* **Mohammad Shaheen**
+* **Molham Al-Khodari**
+* **Robin Beck**
+* **Luca Voges**
 
 ## License
 

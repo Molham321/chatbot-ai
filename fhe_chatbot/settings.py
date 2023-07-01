@@ -88,10 +88,24 @@ WSGI_APPLICATION = 'fhe_chatbot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+database_engine = 'django.db.backends.mysql' if os.environ['DATABASE_ENGINE'] == 'mysql' \
+    else 'django.db.backends.sqlite3'
+
+if os.environ['DATABASE_ENGINE'] == 'mysql':
+    database_fields = {
+        "OPTIONS": {
+            "read_default_file": os.environ['DATABASE_FILE']
+        }
+    }
+else:
+    database_fields = {
+        "NAME": os.environ['DATABASE_FILE']
+    }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'ENGINE': database_engine,
+        **database_fields
     }
 }
 
@@ -129,8 +143,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = "./static-files/"
+STATIC_URL = 'static/'
+
+if not DEBUG:
+    STATICFILES_DIRS = [
+        os.environ['STATIC_FILES_DIR']
+    ]
 
 REST_FRAMEWORK = {
     # enable JSON renderer by default
@@ -151,10 +169,10 @@ CHANNEL_LAYERS = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 MAIL_SETTINGS = {
-    'server': '',
-    'port': 587,
-    'username': '',
-    'recipient': '',
-    'sender': '',
-    'password': ''
+    'server': os.environ['SMTP_SERVER'],
+    'port': os.environ['SMTP_PORT'],
+    'username': os.environ['SMTP_USERNAME'],
+    'recipient': os.environ['SMTP_RECIPIENT'],
+    'sender': os.environ['SMTP_SENDER'],
+    'password': os.environ['SMTP_PASSWORD']
 }

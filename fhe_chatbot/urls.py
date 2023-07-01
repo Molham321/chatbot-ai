@@ -26,6 +26,3 @@ urlpatterns = [
     path('logging/', include('chatbot_logging.urls', 'logging_api')),
     path('adminpanel/', include('admin_panel.urls', 'adminpanel')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-print("asdf")
-print(static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
