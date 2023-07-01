@@ -32,7 +32,6 @@ const TYPE_EMPLOYEE = 'employee';
 const TYPE_SYSTEM = 'system';
 
 
-
 /**
  * Special secret easer egg class
  * @type {string}
@@ -215,6 +214,7 @@ function onWebSocketMessage(event) {
     } else if (type === 'employee_joined') {
         isEmployeeConnected = true
         renderMessage(sender, data.message);
+        toggleProcessing(false);
     } else if (type === 'employee_disconnected') {
         isEmployeeConnected = false
         renderMessage(sender, data.message);
