@@ -9,8 +9,19 @@
         <div class="chat-wrapper" id="chat-history">
         </div>
 
-        <div class="input-message">
+        <div class="chat-wrapper">
+            <div class="container bot row">
+                <div id="typing-indicator" class="typing-indicator-container hidden">
+                    <div class="typing-indicator-bubble">
+                        <div class="typing-indicator-bubble-dot"></div>
+                        <div class="typing-indicator-bubble-dot"></div>
+                        <div class="typing-indicator-bubble-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="input-message">
 
 
             <div class="row flex no-margin">
@@ -23,7 +34,8 @@
 
                 <div class="col s3 valign-wrapper" id="input-button">
                     <div class="row no-margin">
-                        <a class="btn-small waves-effect waves-light fhe-send-color" title="Frage senden" id="send-button">
+                        <a class="btn-small waves-effect waves-light fhe-send-color" title="Frage senden"
+                           id="send-button">
                             <i class="material-icons">send</i>
                         </a>
                     </div>
