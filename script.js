@@ -16,7 +16,7 @@ function ToggleChatbot() {
     iframe = document.createElement('iframe');
     iframe.src = "http://127.0.0.1:8000/chatbot/";
     iframe.width = "100%";
-    iframe.height = "90%";
+    iframe.height = "100%";
     iframe.style.border = "1px solid lightgray";
     iframe.name = "Test";
 

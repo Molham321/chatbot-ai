@@ -3,22 +3,17 @@
 
 {% block content %}
     <div id="chat">
+        <div class="chat-container">
 
+            <div id="notification-button-container">
+            <button id="notifications-button" class="btn waves-effect waves-light">
+              <i class="material-icons left">notifications</i>
+              Möchten Sie über neue Chat-Nachrichten informiert werden?
+            </button>
+          </div>
 
-    <div id="notification-button-container" class="container">
-    <button id="notifications-button" class="btn waves-effect waves-light">
-      <i class="material-icons left">notifications</i>
-      Möchten Sie über neue Chat-Nachrichten informiert werden?
-    </button>
-  </div>
-
-    <div class="disable-scrollbars">
-        <div class="chat-wrapper" id="chat-history">
-        </div>
-
-        <div class="input-message">
-            <div class="chat-wrapper">
-                <div class="container bot row">
+            <div class="chat-scroller">
+                <div class="chat-wrapper" id="chat-history">
                     <div id="typing-indicator" class="typing-indicator-container hidden">
                         <div class="typing-indicator-bubble">
                             <div class="typing-indicator-bubble-dot"></div>
@@ -28,31 +23,28 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="input-message">
-
-                <div class="row flex no-margin">
-                    <div class="col s7" id="input-field">
-                        <div class="input-field">
-                            <textarea id="actual-message" class="materialize-textarea"></textarea>
-                            <label for="actual-message">Frage</label>
-                        </div>
-                    </div>
-
-                    <div class="col s3 valign-wrapper" id="input-button">
-                        <div class="row no-margin">
-                            <a class="btn-small waves-effect waves-light fhe-send-color" title="Frage senden"
-                               id="send-button">
-                                <i class="material-icons">send</i>
-                            </a>
-                        </div>
+        <div class="input-message">
+            <div class="compose-bar">
+                <div class="message-input" id="input-field">
+                    <div class="input-field">
+                        <textarea id="actual-message" class="materialize-textarea"></textarea>
+                        <label for="actual-message">Frage</label>
                     </div>
                 </div>
-
+                <div class="button send" id="input-button">
+                    <div class="row no-margin">
+                        <a class="btn-small waves-effect waves-light fhe-color" title="Frage senden"
+                           id="send-button">
+                            <i class="material-icons">send</i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <input type="hidden" id="session-token" value="{{ session_id }}">
     </div>
+    <input type="hidden" id="session-token" value="{{ session_id }}">
 {% endblock %}
 
 {% block scripts %}

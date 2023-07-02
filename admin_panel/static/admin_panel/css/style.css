@@ -2,6 +2,10 @@ html, body {
     min-height: 100%;
 }
 
+#notification-button-container {
+    text-align: center;
+}
+
 .content-row {
     margin-top: 50px;
 }
