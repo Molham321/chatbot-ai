@@ -38,6 +38,8 @@ var root = document.querySelector('html');
 var messageInput = document.getElementById('actual-message');
 var sendButton = document.getElementById('send-button');
 var typingIndicator = document.getElementById('typing-indicator');
+var notificationsButton = document.getElementById('notifications-button');
+var notificationButtonContainer = document.getElementById('notification-button-container')
 var typingTimer;
 var isUserTyping = false
 
@@ -49,6 +51,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
     const WEBSOCKET_URL = `/ws/admin/chat/${SESSION_TOKEN}/`
 
     let urlParts = window.location.href.split("/")
+
+    if (Notification.permission === 'granted') {
+        notificationButtonContainer.classList.add('hidden');
+    }
 
     // Attach click handler for the question submit button
     sendButton.addEventListener('click', submitMessage);
@@ -91,8 +97,45 @@ document.addEventListener("DOMContentLoaded", function (event) {
     webSocket = new WebSocket("ws://" + window.location.host + WEBSOCKET_URL);
 
     webSocket.onmessage = onWebSocketMessage;
+
+    notificationsButton.addEventListener('click', askNotificationPermission)
+
+    function askNotificationPermission() {
+        function handlePermission(permission) {
+            if (Notification.permission === 'granted') {
+                notificationsButton.classList.add('hidden');
+            }
+        }
+
+        if (!("Notification" in window)) {
+            console.log("This browser does not support notifications.");
+        } else if (checkNotificationPromise()) {
+            Notification.requestPermission().then((permission) => {
+                handlePermission(permission);
+            });
+        } else {
+            Notification.requestPermission((permission) => {
+                handlePermission(permission);
+            });
+        }
+
+        function checkNotificationPromise() {
+            try {
+                Notification.requestPermission().then();
+            } catch (e) {
+                return false;
+            }
+
+            return true;
+        }
+    }
 })
 
+function sendNewMessageNotification(message) {
+    if (Notification.permission === "granted" && !document.hasFocus()) {
+        const notification = new Notification("Neue Chat-Nachricht!", {body: message, icon: ""});
+    }
+}
 
 function onWebSocketMessage(event) {
     const data = JSON.parse(event.data);
@@ -104,6 +147,8 @@ function onWebSocketMessage(event) {
 
     if (type === 'reply') {
         renderMessage(sender, data.message);
+        sendNewMessageNotification(data.message);
+
     } else if (type === 'loading') {
         toggleProcessing(true);
     } else if (type === 'employee_joined') {
@@ -115,6 +160,9 @@ function onWebSocketMessage(event) {
     } else if (type === 'chat_history') {
 
         let messages = data.messages;
+
+        sendNewMessageNotification(messages[0].message);
+
         for (let message of messages) {
             let currentSender = getSenderFromString(message.sender)
             let currentDate = new Date(Date.parse(message.created_at))
