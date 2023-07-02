@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
             if (data.event === "active_sessions") {
                 updateSessionList(data.sessions);
             } else if (data.event === "new_chat_session_notification") {
-                console.log("new chat session", data);
                 handleNewChatSession(data.session);
             } else if (data.event === "chat_session_ended_notification") {
                 handleChatSessionEnded(data.session_token);
@@ -45,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
             } else if (data.event === "employee_left_notification") {
                 handleEmployeeLeftChat(data.session_token);
             } else if (data.event === "join_request_answer") {
-                console.log("join request answer", data)
                 handleJoinRequestAnswer(data.requestor_session_token, data.chat_session_token);
             }
         }
@@ -134,7 +132,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         function handleJoinRequestAnswer(joinRequestorToken, chatSessionToken) {
             if (joinRequestorToken === sessionToken && isChatRequested(chatSessionToken)) {
                 var url = "/adminpanel/chat/" + chatSessionToken;
-                window.open(url, "_blank").focus();
+                var newTab = window.open(url, "_blank");
+
                 startAutoJoinTimeout()
             }
 
