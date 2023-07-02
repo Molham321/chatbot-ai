@@ -1,33 +1,42 @@
 body {
-    overflow-y: scroll;
     color: #334d66;
+    overflow-x: hidden;
+}
+
+#chat {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#chat .chat-container {
+    flex: 1;
+    position: relative;
+}
+
+#chat .chat-container .chat-scroller {
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.chat-wrapper {
+    padding: 2rem;
 }
 
 .flex {
     display: flex !important;
     align-items: center;
-    margin: 0 -85px 0 22px;
-}
-
-.container {
-    margin-top: 15px !important;
-    margin-bottom: 15px !important;
-    font-size: 10pt;
-    animation: slideInLeft;
-    animation-duration: 1.5s;
-    display: flex;
-    align-items: center;
-}
-
-.container.bot {
-    animation: slideInRight;
-    animation-duration: 1.5s;
 }
 
 .wobble {
     animation: headShake ease-in-out;
     animation-duration: 1s;
-    animation-iteration-count:infinite;
+    animation-iteration-count: infinite;
 }
 
 .hinge {
@@ -102,8 +111,6 @@ body {
 }
 
 .input-message {
-    bottom: 0;
-    position: fixed;
     width: 100%;
     background-color: white;
 }
@@ -116,12 +123,41 @@ body {
     clear: both;
 }
 
-.chat-wrapper {
-    padding-bottom: 20%;
-}
-
 .container.faded-out {
     opacity: 0;
+}
+
+.compose-bar {
+    border-top: solid 1px #e2e2e2;
+    padding: 0.5rem 1rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.compose-bar .message-input {
+    flex: 1;
+}
+
+.progress-bar {
+    min-width: 100%;
+    margin-top: 2rem;
+}
+
+.message {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    animation: slideInLeft;
+    animation-duration: 1.5s;
+}
+
+.message.user {
+    justify-content: flex-end;
+    animation: slideInRight;
+    animation-duration: 1.5s;
+    padding-left: 76px;
 }
 
 .container-text {
@@ -129,6 +165,8 @@ body {
     color: black;
     background-color: #fff;
     padding: 10px;
+    flex: 1;
+    max-width: 900px;
 }
 
 .container-text > p {
@@ -182,7 +220,7 @@ body {
 }
 
 .more-information-container.active {
-    left:0;
+    left: 0;
     transition: 0.5s ease;
 }
 
@@ -198,11 +236,12 @@ body {
 }
 
 .questions-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 0 126px 0 93px;
-    width: 75%
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    margin: 0 auto 1rem;
+    max-width: 1000px;
+    gap: 0.5rem;
+    padding: 2rem;
 }
 
 .container.bot.row {
@@ -215,10 +254,10 @@ body {
 
 .question {
     background-color: #FCFFFB;
-    margin: 5px;
     border-radius: 5px;
-    width: 200px;
-    height: 50px;
+    width: 100%;
+    min-height: 50px;
+    padding: 0.5rem;
     flex: 1;
     text-align: center;
     display: none;
@@ -246,7 +285,7 @@ body {
     background-color: lightgrey;
 }
 
-.progress>div{
+.progress > div {
     background-color: rgba(51, 77, 102, 1) !important;
 }
 
@@ -257,8 +296,8 @@ body {
 .typing-indicator-container {
     display: flex;
     flex: none;
-    align-items: flex-end;
-    /*margin: $spacing4 0;*/
+    max-width: 40px;
+    margin: 1rem auto 0;
 }
 
 .typing-indicator-bubble {
@@ -267,7 +306,6 @@ body {
     justify-content: center;
     width: 52px;
     height: 40px;
-    margin: 0px 8px;
     background-color: #f0f1f1;
     border-radius: 12px;
 }
@@ -304,5 +342,58 @@ body {
     }
     30% {
         transform: translateY(-4px);
+    }
+}
+
+@media (max-width: 600px) {
+    .chat-wrapper {
+        padding: 1rem;
+    }
+
+    .avatar-image {
+        max-width: 40px;
+    }
+
+    .message {
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .message.user {
+        padding-left: 48px;
+    }
+
+    .container-text {
+        padding: 0.5rem;
+        border-radius: 0.2rem 0.5rem 0.5rem 0.5rem;
+    }
+
+    .container-text > p {
+        padding: 0.2rem 0.2rem 0;
+    }
+
+    .time-right, .time-left {
+        padding: 0 0.2rem 0.2rem;
+    }
+
+    .questions-container {
+        padding: 1rem;
+    }
+
+    .compose-bar {
+        position: relative;
+        padding-bottom: 2.5rem;
+    }
+
+    .compose-bar .button.send {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 1rem;
+    }
+
+    .compose-bar .button.mail {
+        position: absolute;
+        bottom: 0.5rem;
+        left: 1rem;
     }
 }
