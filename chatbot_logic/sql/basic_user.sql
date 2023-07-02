@@ -1,0 +1,2 @@
+INSERT INTO auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) VALUES (1, 'pbkdf2_sha256$600000$fFzg2T0DFitD7qefA5rvTN$Ro1VnZ1jKZszE8g+TWnN/4gt5nPC2n3Eoqr5IEqCsqY=', null, 0, 'publicuser', '', '', 'publicuser@chatbot.fhe.de', 0, 1, '2023-07-01 20:19:55.823375');
+INSERT INTO authtoken_token (`key`, created, user_id) VALUES ('d56f72fab5d730a9fe15952c035d38c053f9b757', '2023-07-01 20:19:55.823375', 1);

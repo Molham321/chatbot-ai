@@ -13,15 +13,21 @@ def load_data_from_sql(file):
     sql_statements = sql.split(';')
 
     for sql_statement in sql_statements:
-        with connection.cursor() as c:
-            c.execute(sql_statement)
+        if sql_statement:
+            with connection.cursor() as c:
+                c.execute(sql_statement)
 
 
 def truncate_all(apps, schema_editor):
-    Answer.objects.all().delete()
-    Context.objects.all().delete()
-    Keyword.objects.all().delete()
-    Question.objects.all().delete()
+    answers = apps.get_model('chatbot_logic', 'answer')
+    contexts = apps.get_model('chatbot_logic', 'context')
+    keywords = apps.get_model('chatbot_logic', 'keyword')
+    questions = apps.get_model('chatbot_logic', 'question')
+
+    answers.objects.all().delete()
+    contexts.objects.all().delete()
+    keywords.objects.all().delete()
+    questions.objects.all().delete()
 
 
 def insert_data(apps, schema_editor):

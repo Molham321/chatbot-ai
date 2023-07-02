@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'fhe_chatbot'
 
@@ -23,5 +25,4 @@ urlpatterns = [
     path('chatbot/', include('chatbot_logic.api.urls', 'chatbot_api')),
     path('logging/', include('chatbot_logging.urls', 'logging_api')),
     path('adminpanel/', include('admin_panel.urls', 'adminpanel')),
-]
-
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
