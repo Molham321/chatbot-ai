@@ -12,21 +12,26 @@ body {
 
 .chatbot {
   display: none;
-  background-color: rgba(128, 128, 128, 0.9);
+  background: white;
   width: 100%;
+  max-width: 500px;
   height: 100%;
-  border: 1px solid lightgray;
+  max-height: 700px;
+  border-radius: 0.5rem;
 
   position: fixed;
-  bottom: 0;
-  right: 0;
-  border: 3px solid #73AD21;
+  bottom: 6rem;
+  right: 1rem;
+}
+
+.chatbot iframe {
+  border-radius: 0.5rem;
 }
 
 .togeelChatbot {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 1rem;
+  right: 1rem;
   background-color: #73AD21;
   width: 60px;
   height: 60px;
