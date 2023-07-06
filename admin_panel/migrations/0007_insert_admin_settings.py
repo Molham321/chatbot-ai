@@ -12,7 +12,10 @@ def load_data_from_sql(file):
     for sql_statement in sql_statements:
         if sql_statement:
             with connection.cursor() as c:
-                c.execute(sql_statement)
+                try:
+                    c.execute(sql_statement)
+                except:
+                    print(f"Failed executing statement {sql_statement}")
 
 
 def insert_data(apps, schema_editor):
