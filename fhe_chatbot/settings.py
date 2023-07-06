@@ -146,9 +146,11 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 if not DEBUG:
-    STATICFILES_DIRS = [
-        os.environ['STATIC_FILES_DIR']
-    ]
+    STATICFILES_DIRS = []
+    STATIC_ROOT = os.environ['STATIC_FILES_DIR']
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+CSRF_TRUSTED_ORIGINS = [os.environ['CSRF_TRUSTED_ORIGINS']]
 
 REST_FRAMEWORK = {
     # enable JSON renderer by default
